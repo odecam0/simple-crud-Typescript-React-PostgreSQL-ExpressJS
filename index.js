@@ -20,7 +20,7 @@ app.get('*', (req, res) => {
     res.sendFile('client/build/index.html');
 })
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3001;
 app.listen(port, () => {
     console.log(`Express listening to port: ${port}`)
 })
