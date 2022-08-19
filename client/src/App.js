@@ -1,30 +1,95 @@
 import React, { useState } from 'react';
 import './App.css';
 
-function App(props) {
-    const [mock, setMock] = useState({
-	"nome_produto": "",
-	"valor": "",
-	"quantidade_vendas": "",
-	"codigo": "",
-	"descricao": "",
-    })
+function RegisterProductForm (props) {
 
-    function getMock() {
-	fetch('/mock_data', {cache: "no-store"})
-	    .then(res => res.json())
-	    .then(data => setMock(data))
-	    .catch(err => console.error(err))
+    const [data, setData] = useState({
+	"pname": "",
+	"price": "",
+	"amount_sold": "",
+	"pid": "",
+	"description": "",
+    });
+
+    function handleChange(e) {
+	setData({...data, [e.target.name]: e.target.value });
+    };
+
+    function regProd(e) {
+	e.preventDefault();
+	fetch('/api/register_product', {
+	    method: 'POST',
+	    headers: {
+		'Content-Type': 'application/json',
+	    },
+	    body: JSON.stringify(data),
+	}).catch(err => console.error(err));
+
+	setData({
+	    "pname": "",
+	    "price": "",
+	    "amount_sold": "",
+	    "pid": "",
+	    "description": "",
+	});
     }
 
     return (
+	<form onSubmit={regProd}>
+	    <label>
+		Product's name:
+		<input
+		    type='text'
+		    name='pname'
+		    value={data.pname}
+		    onChange={handleChange} />
+		</label>
+		<br/>
+		<label>
+		    Product's price:
+		    <input
+			type='text'
+			name='price'
+			value={data.price}
+			onChange={handleChange}/>
+		    </label>
+		    <br/>
+		    <label>
+			Amount of products sold:
+			<input
+			    type='text'
+			    name='amount_sold'
+			    value={data.amount_sold}
+			    onChange={handleChange}/>
+		    </label>
+		    <br/>
+		    <label>
+			Product's ID:
+			<input
+			    type='text'
+			    name='pid'
+			    value={data.pid}
+			    onChange={handleChange}/>
+			</label>
+			<br/>
+			<label>
+			    Product's description:
+			    <input
+				type='text'
+				name='description'
+				value={data.description}
+				onChange={handleChange}/>
+			</label>
+	    <br/>
+	    <input type='submit' value='Submit'/>
+	</form>
+    );
+}
+
+function App(props) {
+    return (
 	<div className="App">
-	    <button onClick={getMock}>Get data</button>
-	    <p>{mock['nome_produto']}</p>
-	    <p>{mock['valor']}</p>
-	    <p>{mock['quantidade_vendas']}</p>
-	    <p>{mock['codigo']}</p>
-	    <p>{mock['descricao']}</p>
+	   <RegisterProductForm/> 
 	</div>
     );
 }

@@ -2,18 +2,44 @@ const express = require('express');
 const app = express();
 
 app.use(express.static('client/build'));
+app.use(express.json());
 
-const mock_data = {
-    "nome_produto": "produto1",
-    "valor": 500,
-    "quantidade_vendas": 20,
-    "codigo": "1234567",
-    "descricao": "Um produto de mentira",
-}
+// DB in memory for simplicity
+const data = [];
 
-app.get('/mock_data', (req, res) => {
-    console.log("Get to /mock_data");
-    res.send(mock_data);
+app.get('/api/products_range', (req, res) => {
+    console.log("Get to /api/products_range");
+
+    const send_data = data.slice(req.body.first, req.body.last);
+    console.log(send_data)
+
+    res.send(send_data);
+})
+
+app.post('/api/register_product', (req, res) => {
+    console.log("Post to /api/register_product")
+
+    // Index of product tha has same PID attribute
+    // if -1 then no product has same PID
+    let product_index =  -1;
+
+    data.forEach((value, index, array) => {
+	if (req.body.pid == value.pid) {
+	    product_index = index;
+	}
+    })
+
+    if (product_index != -1) {
+	data[product_index] = {...data[product_index], quantity: data[product_index].quantity + 1}
+    } else {
+	data.push({...req.body, "quantity": 1})
+    }
+
+    console.log(data)
+})
+
+app.post('/api/update_product', (req, res) => {
+    console.log("Post to /api/update_product")
 })
 
 app.get('*', (req, res) => {
