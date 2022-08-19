@@ -7,10 +7,12 @@ app.use(express.json());
 // DB in memory for simplicity
 const data = [];
 
-app.get('/api/products_range', (req, res) => {
-    console.log("Get to /api/products_range");
+app.post('/api/products_range', (req, res) => {
+    console.log("Post to /api/products_range");
 
-    const send_data = data.slice(req.body.first, req.body.last);
+    const start = parseInt(req.body.first);
+    const end = parseInt(req.body.last);
+    const send_data = data.slice(start, end + 1);
     console.log(send_data)
 
     res.send(send_data);
