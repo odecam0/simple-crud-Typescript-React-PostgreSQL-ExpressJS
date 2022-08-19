@@ -42,6 +42,35 @@ app.post('/api/register_product', (req, res) => {
 
 app.post('/api/update_product', (req, res) => {
     console.log("Post to /api/update_product")
+
+    const pid_to_modify = parseInt(req.body.pid_to_modify);
+    let index_to_modify = -1;
+
+    data.forEach((p, i) => {
+	if (p.pid == pid_to_modify) {
+	    index_to_modify = i; 
+	} 
+    });
+
+    // Is the client trying to change into existing PID?
+    data.forEach((p) => {
+	if (p.pid == req.body.pid && p.pid != pid_to_modify) {
+	    index_to_modify = -1;
+	}
+    });
+
+    if (index_to_modify != -1) {
+	data[index_to_modify] = {
+	    ...data[index_to_modify],
+	    'pname': req.body.pname,
+	    'description': req.body.description,
+	    'pid': req.body.pid,
+	};
+	res.sendStatus(200);
+    } else {
+	// Could not find the PID specified to modify
+	res.sendStatus(422);
+    }
 })
 
 app.get('*', (req, res) => {
