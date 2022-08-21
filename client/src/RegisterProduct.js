@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function RegisterProductForm (props) {
+export function RegisterProductForm (props) {
 
     const [data, setData] = useState({
 	"pname": "",
