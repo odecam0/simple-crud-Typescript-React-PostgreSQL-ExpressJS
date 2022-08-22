@@ -4,7 +4,8 @@ import './App.css';
 import { Link, Routes, Route } from 'react-router-dom';
 
 import { ModifyProduct } from './ModifyProduct.js';
-import { ShowRangeOfProducts } from './ShowProducts.js';
+// import { ShowRangeOfProducts } from './ShowProducts.js';
+import { StyledShowProducts } from './ShowProducts.js';
 import { RegisterProductForm } from './RegisterProduct.js';
 
 function NavigationBar(props) {
@@ -23,7 +24,6 @@ function NavigationBar(props) {
     );
 }
 
-
 function App(props) {
     return (
 	<div className="App">
@@ -31,7 +31,7 @@ function App(props) {
 	    <Routes>
 		<Route path="/" element={<RegisterProductForm/>} />
 		<Route path="/register_product" element={<RegisterProductForm/>} />
-		<Route path="/show_products" element={<ShowRangeOfProducts/>} />
+		<Route path="/show_products" element={<StyledShowProducts/>} />
 		<Route path="/modify_products" element={<ModifyProduct/>} />
 	    </Routes>
 	</div>

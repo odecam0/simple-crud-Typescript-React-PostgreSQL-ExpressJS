@@ -9,7 +9,8 @@ const data = [];
 
 app.get('/api/amount_products', (req, res) => {
     console.log("Get to /api/amount_products");
-    res.send(data.length);
+    console.log(data.length)
+    res.send({'length': data.length});
 })
 
 app.post('/api/products_range', (req, res) => {
@@ -37,12 +38,14 @@ app.post('/api/register_product', (req, res) => {
     })
 
     if (product_index != -1) {
-	data[product_index] = {...data[product_index], quantity: data[product_index].quantity + 1}
+	data[product_index] = {...data[product_index], quantity: data[product_index].quantity + 1};
     } else {
-	data.push({...req.body, "quantity": 1})
+	data.push({...req.body, "quantity": 1});
     }
 
-    console.log(data)
+    console.log(data);
+
+    res.sendStatus(200);
 })
 
 app.post('/api/update_product', (req, res) => {

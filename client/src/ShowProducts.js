@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
 function PaginationWidget (props) {
     // Turn sting props into numbers and
     // deal with even max_page prop
-    const max_p = props.max_p%2==0 ? parseInt(props.max_p) + 1 : parseInt(props.max_p)
+    const max_p = props.max_p%2===0 ? parseInt(props.max_p) + 1 : parseInt(props.max_p)
     const limit = parseInt(max_p/2);
     const total_p = parseInt(props.total_p);
     const this_p = parseInt(props.this_p);
@@ -36,7 +37,7 @@ function PaginationWidget (props) {
     // Turn page numbers into buttons
     const buttons_list = pages_numbers.map(
 	(x) => {
-	    if (x == props.this_p) {
+	    if (x === props.this_p) {
 		return (<button
 			    className='SelectedButton'
 			    key={x}
@@ -61,16 +62,20 @@ function PaginationWidget (props) {
 	setGotoPage("");
     }
 
+    // 
+
     return (
 	<div>
-	    {props.this_p == 1 ?
+	    {props.this_p === 1 ?
 	     <button className='InactiveButton'>Previous page</button> :
-	     <button>Previous page</button>}
+	     <button onClick={e=>props.goto_page(this_p - 1)}>Previous page</button>}
 	    {buttons_list}
-	    {props.this_p == props.total_p ?
+	    {props.this_p === props.total_p ?
 	     <button className='InactiveButton'>Next page</button> :
-	     <button>Next page</button>}
+	     <button onClick={e=>props.goto_page(this_p + 1)}>Next page</button>}
+
 	    <p>Total number of pages: {props.total_p}</p>
+
 	    <form onSubmit={gotoPageSubmit}>
 		<label>
 		    Goto page:
@@ -86,118 +91,98 @@ function PaginationWidget (props) {
 }
 
 export function ShowRangeOfProducts (props) {
-    const [data, setData] = useState({
-	"first": 0,
-	"last": 0
-    });
+    const rows_per_page = props.rows_per_page ?
+	  props.rows_per_page : 10;
+
+    const [productsAmount, setProductsAmount] = useState(0);
 
     const [products, setProducts] = useState([])
 
-    function handleChange (e) {
-	setData((data) => {
-	    return {...data, [e.target.name]: e.target.value}
+    useEffect(() => {
+	fetch('/api/amount_products')
+	    .then(res => res.json())
+	    .then(data => setProductsAmount(data.length))
+	    .catch(err => console.error(err));
+
+	goto_page(1)
+    }, []);
+
+    const n_pages = Math.ceil( productsAmount / rows_per_page );
+
+    const [this_page, setThisPage] = useState(1);
+
+    function ProductList(props) {
+	const ps = products.map(p => {
+	    return (<>
+			<tr>
+			    <td>{p.pname}</td>
+			    <td>{p.price}</td>
+			    <td>{p.amount_sold}</td>
+			    <td>{p.pid}</td>
+			    <td>{p.description}</td>
+			    <td>{p.quantity}</td>
+			</tr>
+		    </>);
 	});
+	return <ul>{ps}</ul>;
     }
 
-    function handleSubmit (e) {
-	e.preventDefault();
+    function goto_page(x) {
+	console.log(x);
+	setThisPage(x);
+
+	const first = (x-1) * rows_per_page;
+	const last  = first + rows_per_page;
 
 	fetch('/api/products_range', {
 	    method: 'POST',
 	    headers: {
 		'Content-Type': 'application/json',
 	    },
-	    body: JSON.stringify(data),
+	    body: JSON.stringify({'first': first, 'last': last}),
 	})
 	    .then(res => res.json())
 	    .then(data => setProducts(data))
     }
 
-    function ProductList(props) {
-	const ps = props.products.map(p => {
-	    return (<li key={p.pid}>
-			{p.pname+','
-			 +p.price+','
-			 +p.amount_sold+','
-			 +p.pid+','
-			 +p.description+','
-			 +p.quantity}
-		       <br/>
-		    </li>);
-	});
-	return <ul>{ps}</ul>;
-    }
-
-    const [p_data, setPData] = useState({
-	'max_p': 10,
-	'this_p': 1,
-	'total_p': 20,
-    });
-
-    function handleChange2(e) {
-	setPData((data) => {
-	    return {...data, [e.target.name]: e.target.value}
-	});
-    }
-
-    function goto_page(x) {
-	console.log(x);
-    }
-
     return(
-	<div>
-	    <ProductList products={products}/>
+	<div className={props.className}>
 	    <PaginationWidget
-		max_p={p_data.max_p}
-		this_p={p_data.this_p}
-	        total_p={p_data.total_p}
+		max_p={9}
+		this_p={this_page}
+	        total_p={n_pages}
 	        goto_page={goto_page}/>
-	    <form>
-		<label>
-		    max_p:
-		    <input
-			type='number'
-			name='max_p'
-			value={p_data.max_p}
-			onChange={handleChange2}/>
-		</label>
-		<label>
-		    this_p:
-		    <input
-			type='number'
-			name='this_p'
-			value={p_data.this_p}
-			onChange={handleChange2}/>
-		</label>
-		<label>
-		    total_p:
-		    <input
-			type='number'
-			name='total_p'
-			value={p_data.total_p}
-			onChange={handleChange2}/>
-		</label>
-	    </form>
-
-	    <form onSubmit={handleSubmit}>
-		<label>
-		    First product index:
-		    <input
-			type='number'
-			name='first'
-			value={data.first}
-			onChange={handleChange}/>
-		</label>
-		<label>
-		    Last product index:
-		    <input
-			type='number'
-			name='last'
-			value={data.last}
-			onChange={handleChange}/>
-		</label>
-		<input type='submit' value='Get products'/>
-	    </form>
+	    <table>
+		<thead>
+		    <tr>
+			<th>Name</th>
+			<th>Price</th>
+			<th>Amount sold</th>
+			<th>ID</th>
+			<th>Description</th>
+			<th>Quantity</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    <ProductList/>
+		</tbody>
+	    </table>
 	</div>	
     );
 }
+
+export const StyledShowProducts = styled(ShowRangeOfProducts)`
+    td, th {
+        text-align: center;
+        border: 1px solid black;
+    }
+
+    table {
+        table-layout: fixed;
+        margin-left: 2rem;
+        margin-right: 2rem;
+        padding: 2rem;
+    }
+`
+
+        // margin-top: 2rem;

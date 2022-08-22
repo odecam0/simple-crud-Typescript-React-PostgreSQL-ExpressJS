@@ -18,6 +18,7 @@ export function RegisterProductForm (props) {
 	e.preventDefault();
 	fetch('/api/register_product', {
 	    method: 'POST',
+	    cache: 'no-store',
 	    headers: {
 		'Content-Type': 'application/json',
 	    },
