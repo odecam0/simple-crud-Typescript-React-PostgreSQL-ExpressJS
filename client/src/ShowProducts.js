@@ -62,8 +62,6 @@ function PaginationWidget (props) {
 	setGotoPage("");
     }
 
-    // 
-
     return (
 	<div>
 	    {props.this_p === 1 ?
@@ -111,21 +109,18 @@ export function ShowRangeOfProducts (props) {
 
     const [this_page, setThisPage] = useState(1);
 
-    function ProductList(props) {
-	const ps = products.map(p => {
-	    return (<>
-			<tr>
-			    <td>{p.pname}</td>
-			    <td>{p.price}</td>
-			    <td>{p.amount_sold}</td>
-			    <td>{p.pid}</td>
-			    <td>{p.description}</td>
-			    <td>{p.quantity}</td>
-			</tr>
-		    </>);
-	});
-	return <ul>{ps}</ul>;
-    }
+    const ps = products.map(p => {
+	return (<>
+		    <tr>
+			<td>{p.pname}</td>
+			<td>{p.price}</td>
+			<td>{p.amount_sold}</td>
+			<td>{p.pid}</td>
+			<td>{p.description}</td>
+			<td>{p.quantity}</td>
+		    </tr>
+		</>);
+    });
 
     function goto_page(x) {
 	console.log(x);
@@ -164,7 +159,7 @@ export function ShowRangeOfProducts (props) {
 		    </tr>
 		</thead>
 		<tbody>
-		    <ProductList/>
+		    {ps}
 		</tbody>
 	    </table>
 	</div>	
@@ -179,10 +174,6 @@ export const StyledShowProducts = styled(ShowRangeOfProducts)`
 
     table {
         table-layout: fixed;
-        margin-left: 2rem;
-        margin-right: 2rem;
-        padding: 2rem;
+        width:100%;
     }
 `
-
-        // margin-top: 2rem;
