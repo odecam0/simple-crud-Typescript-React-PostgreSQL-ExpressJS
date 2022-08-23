@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+import { baseFormStyle } from './StyledForm.js';
 
 export function ModifyProduct (props) {
     const [data, setData] = useState({
@@ -28,7 +30,7 @@ export function ModifyProduct (props) {
     }
 
     return (
-	<form onSubmit={handleSubmit}>
+	<form onSubmit={handleSubmit} className={props.className}>
 	    <label>
 		ID of product to modify:
 		<input text='text' name='pid_to_modify' value={data.pid_to_modify} onChange={handleChange}/>
@@ -45,7 +47,11 @@ export function ModifyProduct (props) {
 		New product pid:
 		<input text='text' name='pid' value={data.pid} onChange={handleChange}/>
 	    </label><br/>
-	    <input type='submit' value='Update product'/>
+	    <input className='submit' type='submit' value='Update product'/>
 	</form>
     );
 }
+
+export const StyledModifyForm = styled(ModifyProduct)`
+    ${ baseFormStyle }       
+`

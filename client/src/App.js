@@ -4,27 +4,28 @@ import './App.css';
 import { Link, Routes, Route } from 'react-router-dom';
 
 import styled from 'styled-components';
+import StyledButton from './StyledButton.js'
 
-import { ModifyProduct } from './ModifyProduct.js';
-// import { ShowRangeOfProducts } from './ShowProducts.js';
+import { StyledModifyForm } from './ModifyProduct.js';
 import { StyledShowProducts } from './ShowProducts.js';
-import { RegisterProductForm } from './RegisterProduct.js';
+import { StyledRegisterForm } from './RegisterProduct.js';
 
 function NavigationBar(props) {
     return (
 	<div className={props.className}>
 	    <Link to="/register_product">
-		<button>Register Product</button>
+		<StyledButton>Register Product</StyledButton>
 	    </Link>
 	    <Link to="/show_products">
-		<button>Show Products</button>
+		<StyledButton>Show Products</StyledButton>
 	    </Link>
 	    <Link to="/modify_products">
-		<button>Modify Product</button>
+		<StyledButton>Modify Product</StyledButton>
 	    </Link>
 	</div>
     );
 }
+
 
 const StyledNavigationBar = styled(NavigationBar)`
     display: flex;
@@ -33,16 +34,6 @@ const StyledNavigationBar = styled(NavigationBar)`
     padding-top: 1rem;
     padding-left: 3rem;
     padding-right: 3rem;
-
-    button {
-        background-color: white;
-        color: green;
-        font-weight: bold;
-        font-size: large;
-        border-radius: 15px;
-        padding: 1rem;
-        border-color: green;
-    }
 `
 
 function Debug(props) {
@@ -92,10 +83,10 @@ function App(props) {
 	<div className="App">
 	    <StyledNavigationBar/>
 	    <Routes>
-		<Route path="/" element={<RegisterProductForm/>} />
-		<Route path="/register_product" element={<RegisterProductForm/>} />
+		<Route path="/" element={<StyledRegisterForm/>} />
+		<Route path="/register_product" element={<StyledRegisterForm/>} />
 		<Route path="/show_products" element={<StyledShowProducts/>} />
-		<Route path="/modify_products" element={<ModifyProduct/>} />
+		<Route path="/modify_products" element={<StyledModifyForm/>} />
 		<Route path="/debug" element={<Debug/>} />
 	    </Routes>
 	</div>

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+import { baseFormStyle } from './StyledForm.js';
 
 export function RegisterProductForm (props) {
 
@@ -35,7 +37,7 @@ export function RegisterProductForm (props) {
     }
 
     return (
-	<form onSubmit={regProd}>
+	<form onSubmit={regProd} className={props.className}>
 	    <label>
 		{"Product's name:"}
 		<input
@@ -81,7 +83,11 @@ export function RegisterProductForm (props) {
 		    onChange={handleChange}/>
 	    </label>
 	    <br/>
-	    <input type='submit' value='Submit'/>
+	    <input className='submit' type='submit' value='Submit'/>
 	</form>
     );
 }
+
+export const StyledRegisterForm = styled(RegisterProductForm)`
+    ${baseFormStyle}
+`;
