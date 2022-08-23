@@ -39,13 +39,14 @@ function PaginationWidget (props) {
 	(x) => {
 	    if (x === props.this_p) {
 		return (<button
-			    className='SelectedButton'
+			    className='number SelectedButton'
 			    key={x}
 			    onClick={e=>props.goto_page(x)}>
 			    {x}
 			</button>);
 	    } else {
 		return (<button
+			    className='number'
 			    onClick={e=>props.goto_page(x)}
 			    key={x}>
 			    {x}
@@ -63,16 +64,18 @@ function PaginationWidget (props) {
     }
 
     return (
-	<div>
-	    {props.this_p === 1 ?
-	     <button className='InactiveButton'>Previous page</button> :
-	     <button onClick={e=>props.goto_page(this_p - 1)}>Previous page</button>}
-	    {buttons_list}
-	    {props.this_p === props.total_p ?
-	     <button className='InactiveButton'>Next page</button> :
-	     <button onClick={e=>props.goto_page(this_p + 1)}>Next page</button>}
+	<div className={props.className}>
+	    <div className='pages'>
+		{props.this_p === 1 ?
+		 <button className='InactiveButton'>Previous page</button> :
+		 <button onClick={e=>props.goto_page(this_p - 1)}>Previous page</button>}
+		{buttons_list}
+		{props.this_p === props.total_p ?
+		 <button className='InactiveButton'>Next page</button> :
+		 <button onClick={e=>props.goto_page(this_p + 1)}>Next page</button>}
+	    </div>
 
-	    <p>Total number of pages: {props.total_p}</p>
+	    <p>Pages: {props.total_p}</p>
 
 	    <form onSubmit={gotoPageSubmit}>
 		<label>
@@ -87,6 +90,66 @@ function PaginationWidget (props) {
 	</div>
     );
 }
+
+const StyledPagination = styled(PaginationWidget)`
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    gap: 0.2rem;
+    color: green;
+    font-weight: bold;
+
+    font-size: medium;
+
+    input {
+        width: 50px;
+        border-color: green;
+        border-radius: 10px;
+        background-color: white;
+        text-align: center;
+        color: green;
+        font-weight: bold;
+    }
+
+    form {
+        display: flex;
+        gap: 0.2rem;
+    }
+
+    p {
+    }
+
+    button {
+        background-color: white;
+        border-color: green;
+        border-radius: 10px;
+        font-size: large;
+        color: green;
+        font-weight: bold;
+    }
+
+    .SelectedButton {
+        background-color: green;
+        color: white;
+    }
+
+    .InactiveButton {
+        color: grey;
+        border-color: grey;
+    }
+
+    button.number {
+        width: 2rem;
+    }
+
+    .pages {
+        display: flex;
+        justify-content: center;
+        gap: 0.25rem;
+    }
+`
 
 export function ShowRangeOfProducts (props) {
     const rows_per_page = props.rows_per_page ?
@@ -142,38 +205,69 @@ export function ShowRangeOfProducts (props) {
 
     return(
 	<div className={props.className}>
-	    <PaginationWidget
+	    <StyledPagination
 		max_p={9}
 		this_p={this_page}
 	        total_p={n_pages}
 	        goto_page={goto_page}/>
-	    <table>
-		<thead>
-		    <tr>
-			<th>Name</th>
-			<th>Price</th>
-			<th>Amount sold</th>
-			<th>ID</th>
-			<th>Description</th>
-			<th>Quantity</th>
-		    </tr>
-		</thead>
-		<tbody>
-		    {ps}
-		</tbody>
-	    </table>
+	    <div id='table-div'>
+		<table>
+		    <thead>
+			<tr>
+			    <th className='th1'>Name</th>
+			    <th className='th2'>Price</th>
+			    <th className='th3'>Amount sold</th>
+			    <th className='th4'>ID</th>
+			    <th className='th5'>Description</th>
+			    <th className='th6'>Quantity</th>
+			</tr>
+		    </thead>
+		    <tbody>
+			{ps}
+		    </tbody>
+		</table>
+	    </div>
 	</div>	
     );
 }
 
 export const StyledShowProducts = styled(ShowRangeOfProducts)`
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    padding-top: 3rem;
+
+    #table-div {
+        flex-grow: 2;
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	height: 100%;
+    }
+
     td, th {
         text-align: center;
-        border: 1px solid black;
+        border-bottom: 1px solid green;
+    }
+
+    tr { height: 3rem; }
+
+    td {
+        word-break: break-all;
     }
 
     table {
+        padding: 2rem;
+        padding-top: 5rem;
         table-layout: fixed;
+        border-collapse: collapse;
         width:100%;
     }
+
+    .th1 { width: 8rem; }
+    .th2 { width: 4rem; }
+    .th3 { width: 8rem; }
+    .th4 { width: 5rem; }
+    .th5 { width: 20rem; }
+    .th6 { width: 5rem; }
 `

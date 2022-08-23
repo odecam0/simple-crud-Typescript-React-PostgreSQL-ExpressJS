@@ -9,7 +9,6 @@ const data = [];
 
 app.get('/api/amount_products', (req, res) => {
     console.log("Get to /api/amount_products");
-    console.log(data.length)
     res.send({'length': data.length});
 })
 
@@ -19,7 +18,6 @@ app.post('/api/products_range', (req, res) => {
     const start = parseInt(req.body.first);
     const end = parseInt(req.body.last);
     const send_data = data.slice(start, end + 1);
-    console.log(send_data)
 
     res.send(send_data);
 })
@@ -42,8 +40,6 @@ app.post('/api/register_product', (req, res) => {
     } else {
 	data.push({...req.body, "quantity": 1});
     }
-
-    console.log(data);
 
     res.sendStatus(200);
 })
