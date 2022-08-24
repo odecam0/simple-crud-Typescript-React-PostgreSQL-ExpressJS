@@ -7,6 +7,27 @@ app.use(express.json());
 // DB in memory for simplicity
 const data = [];
 
+app.get('/api/most_in_stock', (req, res) => {
+    console.log("Get to /api/most-expensive");
+
+    const return_data = [{quantity: 0}, {quantity: 0}, {quantity: 0}];
+
+    for (let i=0; i<data.length; i++){
+	if (data[i].quantity > return_data[0].quantity) {
+	    return_data[2] = return_data[1];
+	    return_data[1] = return_data[0];
+	    return_data[0] = data[i];
+	} else if (data[i].quantity > return_data[1].quantity) {
+	    return_data[2] = return_data[1];
+	    return_data[1] = data[i];
+	} else if (data[i].quantity > return_data[2].quantity) {
+	    return_data[2] = data[i]
+	}
+    }
+
+    res.send(return_data)
+})
+
 app.get('/api/most_expensive', (req, res) => {
     console.log("Get to /api/most-expensive");
 

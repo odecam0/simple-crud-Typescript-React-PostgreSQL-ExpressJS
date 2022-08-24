@@ -11,6 +11,7 @@ import { StyledShowProducts } from './ShowProducts.js';
 import { StyledRegisterForm } from './RegisterProduct.js';
 
 import { ExpensiveProducts } from './ExpensiveProducts';
+import { HighestAmount } from './MostInStock.js';
 
 function NavigationBar(props) {
     return (
@@ -26,6 +27,9 @@ function NavigationBar(props) {
 	    </Link>
 	    <Link to="/expensive_products">
 		<StyledButton>Most Expensive Products</StyledButton>
+	    </Link>
+	    <Link to="/most_in_stock">
+		<StyledButton>Highest amount in stock</StyledButton>
 	    </Link>
 	</div>
     );
@@ -94,6 +98,7 @@ function App(props) {
 		<Route path="/modify_products" element={<StyledModifyForm/>} />
 		<Route path="/debug" element={<Debug/>} />
 		<Route path="/expensive_products" element={<ExpensiveProducts/>} />
+		<Route path="/most_in_stock" element={<HighestAmount/>} />
 	    </Routes>
 	</div>
     );
