@@ -12,6 +12,11 @@ app.get('/api/most_in_stock', (req, res) => {
 
     const return_data = [{quantity: 0}, {quantity: 0}, {quantity: 0}];
 
+    if (data.length === 0) {
+	res.send([]);
+	return;
+    }
+
     for (let i=0; i<data.length; i++){
 	if (data[i].quantity > return_data[0].quantity) {
 	    return_data[2] = return_data[1];
@@ -32,6 +37,11 @@ app.get('/api/most_expensive', (req, res) => {
     console.log("Get to /api/most-expensive");
 
     const return_data = [{price: 0}, {price: 0}, {price: 0}];
+
+    if (data.length === 0) {
+	res.send([]);
+	return;
+    }
 
     for (let i=0; i<data.length; i++){
 	if (data[i].price > return_data[0].price) {
