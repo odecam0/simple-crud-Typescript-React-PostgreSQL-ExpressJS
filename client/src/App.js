@@ -10,6 +10,8 @@ import { StyledModifyForm } from './ModifyProduct.js';
 import { StyledShowProducts } from './ShowProducts.js';
 import { StyledRegisterForm } from './RegisterProduct.js';
 
+import { ExpensiveProducts } from './ExpensiveProducts';
+
 function NavigationBar(props) {
     return (
 	<div className={props.className}>
@@ -21,6 +23,9 @@ function NavigationBar(props) {
 	    </Link>
 	    <Link to="/modify_products">
 		<StyledButton>Modify Product</StyledButton>
+	    </Link>
+	    <Link to="/expensive_products">
+		<StyledButton>Most Expensive Products</StyledButton>
 	    </Link>
 	</div>
     );
@@ -88,6 +93,7 @@ function App(props) {
 		<Route path="/show_products" element={<StyledShowProducts/>} />
 		<Route path="/modify_products" element={<StyledModifyForm/>} />
 		<Route path="/debug" element={<Debug/>} />
+		<Route path="/expensive_products" element={<ExpensiveProducts/>} />
 	    </Routes>
 	</div>
     );

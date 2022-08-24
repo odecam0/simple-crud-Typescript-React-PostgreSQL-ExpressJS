@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
+import { StyledTable } from './TableStyle.js';
+
 function PaginationWidget (props) {
     // Turn sting props into numbers and
     // deal with even max_page prop
@@ -172,17 +174,19 @@ export function ShowRangeOfProducts (props) {
 
     const [this_page, setThisPage] = useState(1);
 
-    const ps = products.map(p => {
-	return (<>
-		    <tr>
-			<td>{p.pname}</td>
-			<td>{p.price}</td>
-			<td>{p.amount_sold}</td>
-			<td>{p.pid}</td>
-			<td>{p.description}</td>
-			<td>{p.quantity}</td>
-		    </tr>
-		</>);
+    const ps = products.map((p, i) => {
+	return (
+	    <>
+		<tr key={i}>
+		    <td>{p.pname}</td>
+		    <td>{p.price}</td>
+		    <td>{p.amount_sold}</td>
+		    <td>{p.pid}</td>
+		    <td>{p.description}</td>
+		    <td>{p.quantity}</td>
+		</tr>
+	    </>
+	);
     });
 
     function goto_page(x) {
@@ -211,7 +215,7 @@ export function ShowRangeOfProducts (props) {
 	        total_p={n_pages}
 	        goto_page={goto_page}/>
 	    <div id='table-div'>
-		<table>
+		<StyledTable>
 		    <thead>
 			<tr>
 			    <th className='th1'>Name</th>
@@ -225,7 +229,7 @@ export function ShowRangeOfProducts (props) {
 		    <tbody>
 			{ps}
 		    </tbody>
-		</table>
+		</StyledTable>
 	    </div>
 	</div>	
     );
@@ -244,30 +248,4 @@ export const StyledShowProducts = styled(ShowRangeOfProducts)`
 	justify-content: start;
 	height: 100%;
     }
-
-    td, th {
-        text-align: center;
-        border-bottom: 1px solid green;
-    }
-
-    tr { height: 3rem; }
-
-    td {
-        word-break: break-all;
-    }
-
-    table {
-        padding: 2rem;
-        padding-top: 5rem;
-        table-layout: fixed;
-        border-collapse: collapse;
-        width:100%;
-    }
-
-    .th1 { width: 8rem; }
-    .th2 { width: 4rem; }
-    .th3 { width: 8rem; }
-    .th4 { width: 5rem; }
-    .th5 { width: 20rem; }
-    .th6 { width: 5rem; }
 `

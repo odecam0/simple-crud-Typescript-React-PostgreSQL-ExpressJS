@@ -27,6 +27,13 @@ export function ModifyProduct (props) {
 	    },
 	    body: JSON.stringify(data),
 	}).catch(err => console.error(err))
+
+	setData({
+	    "pid_to_modify": "",
+	    "pname": "",
+	    "description": "",
+	    "pid": "",
+	});
     }
 
     return (

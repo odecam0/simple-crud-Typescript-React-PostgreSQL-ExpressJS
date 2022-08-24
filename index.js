@@ -7,6 +7,32 @@ app.use(express.json());
 // DB in memory for simplicity
 const data = [];
 
+app.get('/api/most_expensive', (req, res) => {
+    console.log("Get to /api/most-expensive");
+
+    const return_data = [{price: 0}, {price: 0}, {price: 0}];
+
+    for (let i=0; i<data.length; i++){
+	if (data[i].price > return_data[0].price) {
+	    return_data[2] = return_data[1];
+	    return_data[1] = return_data[0];
+	    return_data[0] = data[i];
+	} else if (data[i].price > return_data[1].price) {
+	    return_data[2] = return_data[1];
+	    return_data[1] = data[i];
+	} else if (data[i].price > return_data[2].price) {
+	    return_data[2] = data[i]
+	}
+    }
+
+    res.send(return_data)
+})
+
+app.get('/api/highest_stock', (req, res) => {
+    console.log("Get to /api/highest_stock");
+
+})
+
 app.get('/api/amount_products', (req, res) => {
     console.log("Get to /api/amount_products");
     res.send({'length': data.length});
@@ -35,10 +61,18 @@ app.post('/api/register_product', (req, res) => {
 	}
     })
 
+    const body_data = {
+	...req.body,
+	price: parseInt(req.body.price)
+    };
+
     if (product_index != -1) {
-	data[product_index] = {...data[product_index], quantity: data[product_index].quantity + 1};
+	data[product_index] = {
+	    ...data[product_index],
+	    quantity: data[product_index].quantity + 1
+	};
     } else {
-	data.push({...req.body, "quantity": 1});
+	data.push({...body_data, "quantity": 1});
     }
 
     res.sendStatus(200);
