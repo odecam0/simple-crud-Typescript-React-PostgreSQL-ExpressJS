@@ -176,7 +176,6 @@ export function ShowRangeOfProducts (props) {
 
     const ps = products.map((p, i) => {
 	return (
-	    <>
 		<tr key={i}>
 		    <td>{p.pname}</td>
 		    <td>{p.price}</td>
@@ -185,7 +184,6 @@ export function ShowRangeOfProducts (props) {
 		    <td>{p.description}</td>
 		    <td>{p.quantity}</td>
 		</tr>
-	    </>
 	);
     });
 

@@ -21,7 +21,6 @@ export function ExpensiveProducts (prop) {
 
     const p_list = products.map((p, i) => {
 	return (
-	    <>
 		<tr key={i}>
 		    <td>{p.pname}</td>
 		    <td>{p.price}</td>
@@ -30,7 +29,6 @@ export function ExpensiveProducts (prop) {
 		    <td>{p.description}</td>
 		    <td>{p.quantity}</td>
 		</tr>
-	    </>
 	);
     });
 
