@@ -96,7 +96,7 @@ function App(props) {
 		<Route path="/register_product" element={<StyledRegisterForm/>} />
 		<Route path="/show_products" element={<StyledShowProducts/>} />
 		<Route path="/modify_products" element={<StyledModifyForm/>} />
-		<Route path="/debug" element={<Debug/>} />
+		<Route path="/#/debug" element={<Debug/>} />
 		<Route path="/expensive_products" element={<ExpensiveProducts/>} />
 		<Route path="/most_in_stock" element={<HighestAmount/>} />
 	    </Routes>
