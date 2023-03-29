@@ -5,10 +5,8 @@ export const baseFormStyle = css`
     display: flex;
     flex-flow: column;
     justify-content: center;
-    gap: 1rem;
     align-items: center;
     color: green;
-    height: 100%;
 
     label {
         border: 2px solid green;

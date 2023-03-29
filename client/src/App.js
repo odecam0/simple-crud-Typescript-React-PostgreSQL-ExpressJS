@@ -35,7 +35,6 @@ function NavigationBar(props) {
     );
 }
 
-
 const StyledNavigationBar = styled(NavigationBar)`
     display: flex;
     justify-content: space-evenly;
@@ -43,6 +42,7 @@ const StyledNavigationBar = styled(NavigationBar)`
     padding-top: 1rem;
     padding-left: 3rem;
     padding-right: 3rem;
+    flex-shrink: 1;
 `
 
 function Debug(props) {
@@ -87,9 +87,14 @@ function Debug(props) {
     );
 }
 
+const StyledMainDiv = styled("div")`
+    display: flex;
+    overflow: hidden;
+`
+
 function App(props) {
     return (
-	<div className="App">
+	<StyledMainDiv className="App">
 	    <StyledNavigationBar/>
 	    <Routes>
 		<Route path="/" element={<StyledRegisterForm/>} />
@@ -100,7 +105,7 @@ function App(props) {
 		<Route path="/expensive_products" element={<ExpensiveProducts/>} />
 		<Route path="/most_in_stock" element={<HighestAmount/>} />
 	    </Routes>
-	</div>
+	</StyledMainDiv>
     );
 }
 
