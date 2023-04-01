@@ -7,51 +7,36 @@ app.use(express.json());
 let { sql } = await import('./db.mjs');
 // DB in memory for simplicity
 const data = [];
-app.get('/api/most_in_stock', (req, res) => {
+app.get('/api/most_in_stock', async (req, res) => {
     console.log("Get to /api/most-expensive");
-    const return_data = [{ quantity: 0 }, { quantity: 0 }, { quantity: 0 }];
-    if (data.length === 0) {
-        res.send([]);
-        return;
-    }
-    for (let i = 0; i < data.length; i++) {
-        if (data[i].quantity > return_data[0].quantity) {
-            return_data[2] = return_data[1];
-            return_data[1] = return_data[0];
-            return_data[0] = data[i];
-        }
-        else if (data[i].quantity > return_data[1].quantity) {
-            return_data[2] = return_data[1];
-            return_data[1] = data[i];
-        }
-        else if (data[i].quantity > return_data[2].quantity) {
-            return_data[2] = data[i];
-        }
-    }
-    res.send(return_data);
+    const result = await sql `
+	SELECT * FROM products ORDER BY quantity DESC LIMIT 3;
+`;
+    // const return_data = [{quantity: 0}, {quantity: 0}, {quantity: 0}];
+    // if (data.length === 0) {
+    // 	res.send([]);
+    // 	return;
+    // }
+    // for (let i=0; i<data.length; i++){
+    // 	if (data[i].quantity > return_data[0].quantity) {
+    // 	    return_data[2] = return_data[1];
+    // 	    return_data[1] = return_data[0];
+    // 	    return_data[0] = data[i];
+    // 	} else if (data[i].quantity > return_data[1].quantity) {
+    // 	    return_data[2] = return_data[1];
+    // 	    return_data[1] = data[i];
+    // 	} else if (data[i].quantity > return_data[2].quantity) {
+    // 	    return_data[2] = data[i]
+    // 	}
+    // }
+    res.send(result);
 });
-app.get('/api/most_expensive', (req, res) => {
+app.get('/api/most_expensive', async (req, res) => {
     console.log("Get to /api/most-expensive");
-    const return_data = [{ price: 0 }, { price: 0 }, { price: 0 }];
-    if (data.length === 0) {
-        res.send([]);
-        return;
-    }
-    for (let i = 0; i < data.length; i++) {
-        if (data[i].price > return_data[0].price) {
-            return_data[2] = return_data[1];
-            return_data[1] = return_data[0];
-            return_data[0] = data[i];
-        }
-        else if (data[i].price > return_data[1].price) {
-            return_data[2] = return_data[1];
-            return_data[1] = data[i];
-        }
-        else if (data[i].price > return_data[2].price) {
-            return_data[2] = data[i];
-        }
-    }
-    res.send(return_data);
+    const result = await sql `
+	SELECT * FROM products ORDER BY price DESC LIMIT 3;
+`;
+    res.send(result);
 });
 app.get('/api/amount_products', async (req, res) => {
     console.log("Get to /api/amount_products");
@@ -115,7 +100,6 @@ app.post('/api/register_product', async (req, res) => {
 app.post('/api/update_product', async (req, res) => {
     console.log("Post to /api/update_product");
     const pid_to_modify = parseInt(req.body.pid_to_modify);
-    let index_to_modify = -1;
     const new_pid = parseInt(req.body.pid);
     // Check if the client is trying to change into another existing PID
     if (pid_to_modify != new_pid) {
@@ -147,23 +131,6 @@ app.post('/api/update_product', async (req, res) => {
             res.sendStatus(422);
         }
     }
-    // data.forEach((p) => {
-    // 	if (p.pid == req.body.pid && p.pid != pid_to_modify) {
-    // 	    index_to_modify = -1;
-    // 	}
-    // });
-    // if (index_to_modify != -1) {
-    // 	data[index_to_modify] = {
-    // 	    ...data[index_to_modify],
-    // 	    'pname': req.body.pname,
-    // 	    'description': req.body.description,
-    // 	    'pid': req.body.pid,
-    // 	};
-    // 	res.sendStatus(200);
-    // } else {
-    // 	// Could not find the PID specified to modify
-    // 	res.sendStatus(422);
-    // }
 });
 app.get('*', (req, res) => {
     res.sendFile(path.resolve("./client/build/index.html"));

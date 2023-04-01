@@ -14,56 +14,44 @@ let { sql } = await import('./db.mjs');
 // DB in memory for simplicity
 const data: Product[] = [];
 
-app.get('/api/most_in_stock', (req, res) => {
+app.get('/api/most_in_stock', async (req, res) => {
     console.log("Get to /api/most-expensive");
 
-    const return_data = [{quantity: 0}, {quantity: 0}, {quantity: 0}];
+    const result = await sql<Product[]>`
+	SELECT * FROM products ORDER BY quantity DESC LIMIT 3;
+`
 
-    if (data.length === 0) {
-	res.send([]);
-	return;
-    }
+    // const return_data = [{quantity: 0}, {quantity: 0}, {quantity: 0}];
 
-    for (let i=0; i<data.length; i++){
-	if (data[i].quantity > return_data[0].quantity) {
-	    return_data[2] = return_data[1];
-	    return_data[1] = return_data[0];
-	    return_data[0] = data[i];
-	} else if (data[i].quantity > return_data[1].quantity) {
-	    return_data[2] = return_data[1];
-	    return_data[1] = data[i];
-	} else if (data[i].quantity > return_data[2].quantity) {
-	    return_data[2] = data[i]
-	}
-    }
+    // if (data.length === 0) {
+    // 	res.send([]);
+    // 	return;
+    // }
 
-    res.send(return_data)
+    // for (let i=0; i<data.length; i++){
+    // 	if (data[i].quantity > return_data[0].quantity) {
+    // 	    return_data[2] = return_data[1];
+    // 	    return_data[1] = return_data[0];
+    // 	    return_data[0] = data[i];
+    // 	} else if (data[i].quantity > return_data[1].quantity) {
+    // 	    return_data[2] = return_data[1];
+    // 	    return_data[1] = data[i];
+    // 	} else if (data[i].quantity > return_data[2].quantity) {
+    // 	    return_data[2] = data[i]
+    // 	}
+    // }
+
+    res.send(result)
 })
 
-app.get('/api/most_expensive', (req, res) => {
+app.get('/api/most_expensive', async (req, res) => {
     console.log("Get to /api/most-expensive");
 
-    const return_data = [{price: 0}, {price: 0}, {price: 0}];
+    const result = await sql<Product[]>`
+	SELECT * FROM products ORDER BY price DESC LIMIT 3;
+`;
 
-    if (data.length === 0) {
-	res.send([]);
-	return;
-    }
-
-    for (let i=0; i<data.length; i++){
-	if (data[i].price > return_data[0].price) {
-	    return_data[2] = return_data[1];
-	    return_data[1] = return_data[0];
-	    return_data[0] = data[i];
-	} else if (data[i].price > return_data[1].price) {
-	    return_data[2] = return_data[1];
-	    return_data[1] = data[i];
-	} else if (data[i].price > return_data[2].price) {
-	    return_data[2] = data[i]
-	}
-    }
-
-    res.send(return_data)
+    res.send(result);
 })
 
 interface return_api_amount_products {
