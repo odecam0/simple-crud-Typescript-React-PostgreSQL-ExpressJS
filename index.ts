@@ -1,18 +1,15 @@
-const express = require('express');
+import express from 'express'; // express = require('express');
 const app = express();
 
-const path = require('path');
+import path from 'path';
+// const path = require('path');
 
 app.use(express.static('client/build'));
 app.use(express.json());
 
-interface Product {
-    pid: number;
-    pname: string;
-    description: string;
-    price: number;
-    quantity: number;
-}
+import { Product } from './client/src/CustomTypes.js';
+
+let { sql } = await import('./db.mjs');
 
 // DB in memory for simplicity
 const data: Product[] = [];
@@ -69,47 +66,122 @@ app.get('/api/most_expensive', (req, res) => {
     res.send(return_data)
 })
 
-app.get('/api/amount_products', (req, res) => {
+interface return_api_amount_products {
+    count: number;
+}
+
+app.get('/api/amount_products', async (req, res) => {
     console.log("Get to /api/amount_products");
-    res.send({'length': data.length});
+
+    const [count] = await sql<return_api_amount_products[]>`
+SELECT COUNT(pid) FROM products;
+`
+
+    res.send({'length': count.count});
 })
 
-app.post('/api/products_range', (req, res) => {
+app.post('/api/products_range', async (req, res) => {
+    // SELECT
+    //     *
+    // FROM
+    //     mytable
+    // ORDER BY
+    //     somefield
+    // LIMIT 1 OFFSET 20;
+
+    // This example selects the 21st row. OFFSET 20 is telling Postgres to skip the first 20 records. If you don't specify an ORDER BY
+    // clause, there's no guarantee which record you will get back, which is rarely useful.
+
     console.log("Post to /api/products_range");
 
     const start = parseInt(req.body.first);
     const end = parseInt(req.body.last);
-    const send_data = data.slice(start, end + 1);
+    // const send_data = data.slice(start, end + 1);
+
+    const send_data = await sql<Product[]>`
+	SELECT * FROM products
+	LIMIT ${end - start} OFFSET ${start};
+`
+    console.log(send_data)
 
     res.send(send_data);
 })
 
-app.post('/api/register_product', (req, res) => {
+app.post('/api/register_product', async (req, res) => {
     console.log("Post to /api/register_product")
 
-    // Index of product tha has same PID attribute
-    // if -1 then no product has same PID
-    let product_index =  -1;
+    // // Index of product tha has same PID attribute
+    // // if -1 then no product has same PID
+    // let product_index = -1;
 
-    data.forEach((value, index, array) => {
-	if (req.body.pid == value.pid) {
-	    product_index = index;
-	}
-    })
+    // // Check if there is already a product with this PID
+    // // in the database
+    // data.forEach((value, index, array) => {
+    // 	if (req.body.pid == value.pid) {
+    // 	    product_index = index;
+    // 	}
+    // })
 
-    const body_data = {
-	...req.body,
-	price: parseInt(req.body.price)
-    };
+    // Estou assumindo que vai retornar undefined quando não houver o tal do produto
+    const [product_with_same_pid]  = await sql<Product[]>`
+	SELECT pid,quantity FROM products
+        WHERE pid=${parseInt(req.body.pid)};
+`
+    console.log(product_with_same_pid)
 
-    if (product_index != -1) {
-	data[product_index] = {
-	    ...data[product_index],
-	    quantity: data[product_index].quantity + 1
-	};
+    // const body_data = {
+    // 	...req.body,
+    // 	price: parseInt(req.body.price)
+    // };
+
+
+    if (product_with_same_pid !== undefined) {
+	// In this case, just increase its quantity.
+
+	// UPDATE table_name
+	// SET column1 = value1, column2 = value2, ...
+	// WHERE condition;
+
+	await sql`
+	UPDATE products
+	SET quantity=${product_with_same_pid.quantity + 1}
+	WHERE pid = ${parseInt(req.body.pid)};
+`;
     } else {
-	data.push({...body_data, "quantity": 1});
+	// Well, if it is a new product, then we must insert it on the DB
+
+	await sql`
+	INSERT INTO products (
+	    pname,
+	    price,
+	    amount_sold,
+	    pid,
+	    description,
+	    quantity
+	) VALUES (
+	    ${req.body.pname},
+	    ${parseInt(req.body.price)},
+	    ${parseInt(req.body.amount_sold)},
+	    ${parseInt(req.body.pid)},
+	    ${req.body.description},
+	    1
+	);
+`;
     }
+
+    // // If in fact there is already a product with this PID
+    // // then just increase the quantity of the product in the DB
+    // // discarding the rest of the information
+    // if (product_index != -1) {
+    // 	data[product_index] = {
+    // 	    ...data[product_index],
+    // 	    quantity: data[product_index].quantity + 1
+    // 	};
+    // } else {
+    // 	// Otherwise create a new entry in the DB with an initial
+    // 	// quantity of 1
+    // 	data.push({...body_data, "quantity": 1});
+    // }
 
     res.sendStatus(200);
 })
