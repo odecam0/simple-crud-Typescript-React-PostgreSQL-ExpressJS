@@ -1,25 +1,29 @@
 {
     "engines": {
-	"node": "18.x"
+        "node": "18.x"
     },
     "dependencies": {
-	"express": "^4.18.1"
+        "express": "^4.18.2",
+        "postgres": "^3.3.4"
     },
     "name": "desafio-thummi",
     "version": "1.0.0",
     "description": "Challenge for internship",
     "main": "index.js",
-    "devDependencies": {},
     "scripts": {
-	"start" : "node index.js",
-	"test": "echo \"Error: no test specified\" && exit 1",
-	"heroku-postbuild": "cd client && npm install && npm run build"
+        "start": "node index.js",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "heroku-postbuild": "cd client && npm install && npm run build"
     },
     "keywords": [
-	"express",
-	"react",
-	"heroku"
+        "express",
+        "react",
+        "heroku"
     ],
     "author": "Bruno Macedo",
-    "license": "ISC"
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^18.15.11"
+    },
+    "type" : "module"
 }
