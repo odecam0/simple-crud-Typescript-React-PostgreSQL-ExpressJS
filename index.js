@@ -61,19 +61,9 @@ SELECT COUNT(pid) FROM products;
     res.send({ 'length': count.count });
 });
 app.post('/api/products_range', async (req, res) => {
-    // SELECT
-    //     *
-    // FROM
-    //     mytable
-    // ORDER BY
-    //     somefield
-    // LIMIT 1 OFFSET 20;
-    // This example selects the 21st row. OFFSET 20 is telling Postgres to skip the first 20 records. If you don't specify an ORDER BY
-    // clause, there's no guarantee which record you will get back, which is rarely useful.
     console.log("Post to /api/products_range");
     const start = parseInt(req.body.first);
     const end = parseInt(req.body.last);
-    // const send_data = data.slice(start, end + 1);
     const send_data = await sql `
 	SELECT * FROM products
 	LIMIT ${end - start} OFFSET ${start};
@@ -83,31 +73,13 @@ app.post('/api/products_range', async (req, res) => {
 });
 app.post('/api/register_product', async (req, res) => {
     console.log("Post to /api/register_product");
-    // // Index of product tha has same PID attribute
-    // // if -1 then no product has same PID
-    // let product_index = -1;
-    // // Check if there is already a product with this PID
-    // // in the database
-    // data.forEach((value, index, array) => {
-    // 	if (req.body.pid == value.pid) {
-    // 	    product_index = index;
-    // 	}
-    // })
-    // Estou assumindo que vai retornar undefined quando não houver o tal do produto
     const [product_with_same_pid] = await sql `
 	SELECT pid,quantity FROM products
         WHERE pid=${parseInt(req.body.pid)};
 `;
     console.log(product_with_same_pid);
-    // const body_data = {
-    // 	...req.body,
-    // 	price: parseInt(req.body.price)
-    // };
     if (product_with_same_pid !== undefined) {
         // In this case, just increase its quantity.
-        // UPDATE table_name
-        // SET column1 = value1, column2 = value2, ...
-        // WHERE condition;
         await sql `
 	UPDATE products
 	SET quantity=${product_with_same_pid.quantity + 1}
@@ -134,49 +106,64 @@ app.post('/api/register_product', async (req, res) => {
 	);
 `;
     }
-    // // If in fact there is already a product with this PID
-    // // then just increase the quantity of the product in the DB
-    // // discarding the rest of the information
-    // if (product_index != -1) {
-    // 	data[product_index] = {
-    // 	    ...data[product_index],
-    // 	    quantity: data[product_index].quantity + 1
-    // 	};
-    // } else {
-    // 	// Otherwise create a new entry in the DB with an initial
-    // 	// quantity of 1
-    // 	data.push({...body_data, "quantity": 1});
-    // }
     res.sendStatus(200);
 });
-app.post('/api/update_product', (req, res) => {
+// In this endpoint there are things that must be checked:
+// 1. What if I put an PID that does not exist?
+// 2. What if I select a PID that exists and try
+//    to turn it into another one that exists?
+app.post('/api/update_product', async (req, res) => {
     console.log("Post to /api/update_product");
     const pid_to_modify = parseInt(req.body.pid_to_modify);
     let index_to_modify = -1;
-    data.forEach((p, i) => {
-        if (p.pid == pid_to_modify) {
-            index_to_modify = i;
+    const new_pid = parseInt(req.body.pid);
+    // Check if the client is trying to change into another existing PID
+    if (pid_to_modify != new_pid) {
+        const [product_with_new_pid] = await sql `
+            SELECT pid from products WHERE pid=${new_pid};
+`;
+        const [product_with_old_pid] = await sql `
+	    SELECT pid from products WHERE pid=${pid_to_modify}
+`;
+        // In this case, there is no product with the NEW_PID
+        // And there is also a product with the specified id.
+        // so its ok to change previous PID to NEW_PID
+        if (product_with_new_pid === undefined && product_with_old_pid !== undefined) {
+            // Proceed and change the thing....
+            await sql `
+		UPDATE products
+		    SET
+			pname=${req.body.pname},
+			description=${req.body.description},
+			pid=${parseInt(req.body.pid)}
+		WHERE pid = ${pid_to_modify};
+`;
+            res.sendStatus(200);
         }
-    });
-    // Is the client trying to change into existing PID?
-    data.forEach((p) => {
-        if (p.pid == req.body.pid && p.pid != pid_to_modify) {
-            index_to_modify = -1;
+        else {
+            // TODO: I should send an error message, saying
+            // "YOU CAN'T CHANGE PID INTO AN EXISTING PID >:("
+            // or "THIS PID DOES NOT EXIST >:("
+            res.sendStatus(422);
         }
-    });
-    if (index_to_modify != -1) {
-        data[index_to_modify] = {
-            ...data[index_to_modify],
-            'pname': req.body.pname,
-            'description': req.body.description,
-            'pid': req.body.pid,
-        };
-        res.sendStatus(200);
     }
-    else {
-        // Could not find the PID specified to modify
-        res.sendStatus(422);
-    }
+    // data.forEach((p) => {
+    // 	if (p.pid == req.body.pid && p.pid != pid_to_modify) {
+    // 	    index_to_modify = -1;
+    // 	}
+    // });
+    // if (index_to_modify != -1) {
+    // 	data[index_to_modify] = {
+    // 	    ...data[index_to_modify],
+    // 	    'pname': req.body.pname,
+    // 	    'description': req.body.description,
+    // 	    'pid': req.body.pid,
+    // 	};
+    // 	res.sendStatus(200);
+    // } else {
+    // 	// Could not find the PID specified to modify
+    // 	res.sendStatus(422);
+    // }
 });
 app.get('*', (req, res) => {
     res.sendFile(path.resolve("./client/build/index.html"));
