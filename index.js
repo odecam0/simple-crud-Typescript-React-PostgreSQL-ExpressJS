@@ -5,8 +5,6 @@ import path from 'path';
 app.use(express.static('client/build'));
 app.use(express.json());
 let { sql } = await import('./db.mjs');
-// DB in memory for simplicity
-const data = [];
 app.get('/api/most_in_stock', async (req, res) => {
     console.log("Get to /api/most-expensive");
     const result = await sql `

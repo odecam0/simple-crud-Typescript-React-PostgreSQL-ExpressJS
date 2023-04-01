@@ -11,9 +11,6 @@ import { Product } from './client/src/CustomTypes.js';
 
 let { sql } = await import('./db.mjs');
 
-// DB in memory for simplicity
-const data: Product[] = [];
-
 app.get('/api/most_in_stock', async (req, res) => {
     console.log("Get to /api/most-expensive");
 
