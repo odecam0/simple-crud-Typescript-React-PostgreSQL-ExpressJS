@@ -34,10 +34,10 @@ Eis o link para acessálo: https://simples-crud-challenge.onrender.com
 
 * Paginação
 
-No código fonte do componente de paginação, há um [[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#:~:text=//%20Existem%203%20casos,MAX_P)%20at%C3%A9%20TOTAL_P][grande comentário]] explicando a lógica por trás do
+No código fonte do componente de paginação, há um [[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#L34-L96][grande comentário]] explicando a lógica por trás do
 funcionamento do componente. Em primeiro lugar, o componente recebe 4 propriedades importantes.
 
-[[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#:~:text=interface%20PaginationProps%20%7B,%7D][Trecho do código:]]
+[[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#L15-L21][Trecho do código:]]
 #+begin_src typescript
 interface PaginationProps {
     max_p: number; // Esta propriedade representa o número máximo de páginas que deve
