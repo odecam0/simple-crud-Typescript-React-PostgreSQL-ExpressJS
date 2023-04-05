@@ -37,7 +37,7 @@ Eis o link para acessálo: https://simples-crud-challenge.onrender.com
 No código fonte do componente de paginação, há um [[file:client/src/PaginationWidget.tsx::// Existem 3 casos que podem ocorrer][grande comentário]] explicando a lógica por trás do
 funcionamento do componente. Em primeiro lugar, o componente recebe 4 propriedades importantes.
 
-[[file:client/src/PaginationWidget.tsx::interface PaginationProps {][Techo do código]]
+[[file:client/src/PaginationWidget.tsx::15][Techo do código]]
 #+begin_src typescript
 interface PaginationProps {
     max_p: number; // Esta propriedade representa o número máximo de páginas que deve
