@@ -9,7 +9,7 @@ Foi especificada a estrutura de um produto dentre outras coisas.
 Fiz o projeto com todos os desafios, o maior sendo o widget de paginação. Acabei sendo selecionado mas o recrutador
 nunca mais entrou em contato.. (então será que fui selecionado mesmo?!). Escolhi depois de uns meses adaptar o projeto
 para [[https://www.typescriptlang.org/][TypeScript]] e integrá-lo com [[https://www.postgresql.org/][PostgreSQL]] (antes o projeto tinha um array em memória com os produtos por questão de
-simplicidade). Desde o principio *StyledComponents* foi utilizado para adcionar estilo aos elementos.
+simplicidade). Desde o principio [[https://styled-components.com/][StyledComponents]] foi utilizado para adcionar estilo aos elementos.
 
 A aplicação foi hospedada utilizando o serviço de hospedagem do [[https://render.com/][Render]], tanto o servidor quanto o banco de dados.
 Eis o link para acessálo: https://simples-crud-challenge.onrender.com
@@ -20,7 +20,7 @@ Eis o link para acessálo: https://simples-crud-challenge.onrender.com
   - [[https://github.com/odecam0/desafio-thummi/blob/main/db.mjs][db.mjs]]   -> Modulo que conecta no banco de dados e exporta um objeto para acessá-lo
   + client/  
     + src/   -> Pasta com o código fonte do Front-End utilizando [[https://react.dev/][React]]
-      - [[file:client/src/App.js][App.js]] -> Arquivo com componente da barra de navegação utilizando *react-router-dom*.
+      - [[file:client/src/App.js][App.js]] -> Arquivo com componente da barra de navegação utilizando [[https://reactrouter.com/en/main][react-router-dom]].
       - [[file:client/src/RegisterProduct.tsx][RegisterProduct.tsx]] -> Componente com formulário para registro de um produto
       - [[file:client/src/ModifyProduct.tsx][ModifyProduct.tsx]] -> Componente com formulário para modificação de um produto
       - [[file:client/src/ShowProducts.tsx][ShowProducts.tsx]] -> Componente que exibe produtos cadastrados, utiliza componente de paginação que foi desenvolvido
@@ -185,6 +185,7 @@ Após este trecho de código ser executado temos um arrai com o número das pág
 devem ser exibidas na barra, e possívelmente algumas strings '...'. Agora devemos
 tranformá-la em uma lista de botões prontos para serem exibidos.
 
+[[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#L127-L152][Trecho do código:]]
 #+begin_src typescript
     const buttons_list = pages_numbers.map(
 	(x, i) => {
@@ -220,7 +221,62 @@ tranformá-la em uma lista de botões prontos para serem exibidos.
     )
 #+end_src
 
+Aqui chamamos função 'map' no Array 'pages_numbers', de forma que para cada elemento do Array a função
+com os 3 casos seja executada. Os 3 casos servem para tratar caso o botão seja referente à pagina atual
+desta forma ele deve ser exibido com algum destaque, isto é indicado pelo parâmetro 'selected' que é passado
+para o componente do botão, caso o elemento não seja a string '...', neste caso deve-se criar um botão
+comum, e caso seja de fato a string '...' deve-se criar um botão sem o parâmetro onClick, que nos outros
+casos receberam a função goto_page do componente pai, com o número de suas respectivas páginas como parâmetro,
+dessa forma, ao clicar nos botões comuns irá exibir as paginas adequadas, e ao clicar no botão com '...' nada ocorrerá.
 
-* Coisas a fazer:
-- [ ] Documentar como a paginação está sendo feita.
-- [ ] Adcionar type annotations nas requisições e respostas em index.ts.
+[[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#L155-L160][Trecho do código:]]
+#+begin_src typescript
+    const [goto_page, setGotoPage] = useState<string>("");
+    const gotoPageSubmit = (e: React.FormEvent<HTMLFormElement>) : void => {
+	e.preventDefault();
+	props.goto_page(parseInt(goto_page));
+	setGotoPage("");
+    }
+#+end_src
+
+Este trecho de código serve para lidar com um pequeno formulário que existe para
+acessar uma página diretamente digitando seu número, sem clicar no botão na barra
+de paginação. Utilizamos um State Hook para armazenar o valor incluido no formulário,
+e um callback function para ser chamado quando o usuário clicar em 'Go'. Este
+callback basicamente chama a função goto_page do componente pai, e reseta o valor
+do formulário para que volte à estar vazio.
+
+O componente retorna um div com 2 elementos principais que explicarei separadamente.
+[[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#L164-L172][Trecho do código:]]
+#+begin_src typescript
+	    <div className='pages'>
+		{props.this_p === 1 ?
+		 <StyledButton inactive>Previous page</StyledButton> :
+		    <StyledButton onClick={() => props.goto_page(this_p - 1)}>Previous page</StyledButton>}
+		{buttons_list}
+		{props.this_p === props.total_p ?
+		 <StyledButton inactive>Next page</StyledButton> :
+		    <StyledButton onClick={() => props.goto_page(this_p + 1)}>Next page</StyledButton>}
+	    </div>
+#+end_src
+
+Este trecho é responsável por exibir os botões da barra de paginação.
+São exbidos também, antes e depois, botões para selecionar próxima página ou a página
+anterior, e testes são feitos para que, caso esteja na primeira página, não seja possível
+ir para a página anterior, e semelhante para a última paǵina.
+
+[[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#L176-L185][Trecho do código:]]
+#+begin_src 
+	    <form onSubmit={e => gotoPageSubmit(e)}>
+		<label>
+		    Goto page:
+		    <input
+			type='text'
+			value={goto_page}
+			onChange={e => setGotoPage(e.target.value)}/>
+		</label>
+		<input type='submit' value='Go'/>
+	    </form>
+#+end_src
+
+Este trecho é responsável por exibir o pequeno formúlario que comentei acima.
