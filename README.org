@@ -49,9 +49,178 @@ interface PaginationProps {
 }
 #+end_src
 
+A função 'goto_page' é chamada quando se clica em um botão de uma página, ou se
+seleciona uma página manualmente digitando. Ela recebe justamente
+o número da página e é responsável por buscar os dados que serão exibidos. Sua
+implementação é deixada para o componente pai do componente de paginação. Como na
+seguinte implementação:
+
+[[https://github.com/odecam0/desafio-thummi/blob/main/client/src/ShowProducts.tsx#L49-L65][Trecho do código:]]
+#+begin_src typescript
+const goto_page = (x : number) : void => {
+    setThisPage(x);
+
+    const first = (x-1) * rows_per_page;
+    const last  = first + rows_per_page;
+
+    fetch('/api/products_range', {
+	method: 'POST',
+	headers: {
+	    'Content-Type': 'application/json',
+	},
+	body: JSON.stringify({'first': first, 'last': last}),
+    })
+	.then(res => res.json())
+	.then((data : Product[]) => setProducts(data))
+}
+#+end_src
+
+setThisPage e setProducts são [[https://react.dev/learn/state-a-components-memory][State Hooks]] utilizados para indicar ao componente
+a página atual, e as informações dos produtos que serão exibidos. Dessa forma o
+componente de paginação só é responsável por exibir a barra de paginação e chamar
+esta função com o parâmetro adequado quando uma página for trocada.
+
+Aproveite e veja também como o componente de paginação é chamado no componente pai.
+https://github.com/odecam0/desafio-thummi/blob/main/client/src/ShowProducts.tsx#L69-L73
+
+[[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#L23-L29][Trecho do código:]]
+#+begin_src typescript
+const PaginationWidget : React.FC<PaginationProps>= (props) => {
+    const max_p = props.max_p%2===0 ? props.max_p + 1 : props.max_p
+    const limit = Math.floor(max_p/2);
+
+    let pages_numbers : Array<number | '...'> = [];
+#+end_src
+
+O componente inicia definindo algumas variáveis fundamentais para calcular quais
+botões serão exibidos na tela.
+
+A constante 'max_p' é diretamente a propriedade max_p passada para o componente, porém
+nela se toma o cuidado de que sempre seja ímpar, pois quero que ao exibir os botões,
+quando houverem botões sobrando para a esquerda e para a direita, a página atual
+seja exibida extamente no meio da barra, caso este número fosse par isso não seria
+possível.
+
+Já a constante 'limit' é utilizada para definir a partir de que distância entre a página
+atual e a primeira página, ou entre a atual e a ultima página, se deve começar a não exibir
+determinadas páginas. Isto será visto no próximo trecho de código.
+
+'pages_numbers' é uma lista com os números das páginas que serão exibidos atualmente
+na barra de paginação. Posteriormente adcionei a string '...' para indicar que alguns
+números de páginas estão sendo executados, por isso o array pode possuir ou números, ou
+a string '...'. Mais para frente no código este array é utilizado para gerar os botões
+que serão exibidos.
+
+[[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#L98-L124][Trecho do código:]]
+#+begin_src typescript
+    // Caso hajam mais páginas doque o total que pode ser exibido na
+    // barra de paginação
+    if (total_p > max_p) {
+	// Os próximos 3 casos serão explicados separadamente abaixo
+
+	// Primeiro caso
+	if ( this_p <= limit ) {
+
+	    for (let i=1; i<=max_p; i++) {
+		pages_numbers.push(i);
+	    }
+	    pages_numbers.push('...');
+
+	// Segundo caso
+	} else if ( this_p <= total_p - limit ) {
+
+	    pages_numbers.push('...');
+	    for (let i=this_p-limit; i<= this_p+limit; i++) {
+		pages_numbers.push(i);
+	    }
+	    pages_numbers.push('...');
+
+	// Terceiro caso
+	} else {
+	    
+	    pages_numbers.push('...');
+	    for (let i=total_p-(max_p-1); i<=total_p; i++) {
+		pages_numbers.push(i);
+	    }
+
+	}
+
+    // Caso haja menos páginas doque o total que pode ser exibido na
+    // barra de paginação, deve-se trivialmente incluir todas as páginas
+    // na barra.
+    } else {
+
+	for (let i=1; i<=total_p; i++) {
+	    pages_numbers.push(i);
+	}
+
+    }
+#+end_src
+
+Neste trecho de código, no caso de haverem mais páginas doque o máximo de páginas que
+cabem na barra de paginação, existem 3 casos a serem tratados, sinalizados acima.
+
+O primeiro caso, é quando a página atual está próxima o suficiente da primeira página
+de forma que não seja necessário ocultar nenhuma página do inicio, apenas as páginas
+do final. Isto é conferido utilizando a variável 'limit', caso o número da página
+atual seja menor que 'limit', então deve-se incluir na barra de paginação todos os
+número de 1 até o número máximo que cabe na barra, ou seja, 'max_p'. Ao final incluimos
+também um botão que não terá efeito algum com o texto '...' para sinalizar que páginas
+próximas do fim estão sendo ocultadas.
+
+No segundo caso já sabemos que a página atual está afastada da primeira página o suficiente
+para ocultarmos algumas das primeiras páginas, oque não sabemos, é o quão afastada está.
+Então testamos se está afastada também da última página, e este é o segundo caso, sendo
+necessário ocultar tanto páginas do início quanto páginas do fim. Este caso que torna
+necessário que 'max_p' seja ímpar.
+
+O terceiro e último caso, como pode ter ficado claro, ocorre quando a página atual
+está próxima o suficiente da última página de forma que não seja necessário ocultar
+nenhuma página do fim, apenas do inicio, de forma análoga ao primeiro caso.
+
+Caso esta explicação não tenha sido clara, você é convidaddo à ler o  [[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#L34-L96][grande comentário]]
+no código fonte que explica com maiores detalhes.
+
+Após este trecho de código ser executado temos um arrai com o número das páginas que
+devem ser exibidas na barra, e possívelmente algumas strings '...'. Agora devemos
+tranformá-la em uma lista de botões prontos para serem exibidos.
+
+#+begin_src typescript
+    const buttons_list = pages_numbers.map(
+	(x, i) => {
+
+	    // Primeiro caso
+	    if (x === props.this_p) {
+		return (<StyledButton
+			    selected
+			    className='number'
+			    key={i}
+			onClick={() => props.goto_page(x)}>
+			    {x}
+			</StyledButton>);
+
+	    // Segundo caso
+	    } else if (x !== '...'){
+		return (<StyledButton
+			 className='number'
+			onClick={() => props.goto_page(x)}
+			 key={i}>
+			 {x}
+			</StyledButton>);
+
+	    // Terceiro caso
+	    } else {
+		return(<StyledButton
+			className='number'
+			key={i}>
+			{x}
+		       </StyledButton>);
+	    }
+	}
+    )
+#+end_src
 
 
 * Coisas a fazer:
-- [ ] Escrever uma breve descrição para cada arquivo na pasta client/src/.
 - [ ] Documentar como a paginação está sendo feita.
 - [ ] Adcionar type annotations nas requisições e respostas em index.ts.
