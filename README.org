@@ -247,6 +247,7 @@ callback basicamente chama a função goto_page do componente pai, e reseta o va
 do formulário para que volte à estar vazio.
 
 O componente retorna um div com 2 elementos principais que explicarei separadamente.
+
 [[https://github.com/odecam0/desafio-thummi/blob/main/client/src/PaginationWidget.tsx#L164-L172][Trecho do código:]]
 #+begin_src typescript
 	    <div className='pages'>
