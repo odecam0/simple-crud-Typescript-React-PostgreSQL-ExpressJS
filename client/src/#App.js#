@@ -6,7 +6,7 @@ import { Link, Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import StyledButton from './StyledButton.js'
 
-mimport { StyledModifyForm } from './ModifyProduct.js';
+import { StyledModifyForm } from './ModifyProduct.js';
 import { StyledShowProducts } from './ShowProducts.js';
 import { StyledRegisterForm } from './RegisterProduct.js';
 

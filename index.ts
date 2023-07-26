@@ -1,8 +1,7 @@
-import express from 'express'; // express = require('express');
+import express from 'express'; 
 const app = express();
 
 import path from 'path';
-// const path = require('path');
 
 app.use(express.static('client/build'));
 app.use(express.json());
@@ -11,32 +10,23 @@ import { Product } from './client/src/CustomTypes.js';
 
 let { sql } = await import('./db.mjs');
 
+sql`
+   CREATE TABLE IF NOT EXISTS products (
+      pname VARCHAR(30),
+      price INT,
+      amount_sold INT,
+      pid INT PRIMARY KEY,
+      description VARCHAR(201),
+      quantity INT
+   );
+`
+
 app.get('/api/most_in_stock', async (req, res) => {
     console.log("Get to /api/most-expensive");
 
     const result = await sql<Product[]>`
 	SELECT * FROM products ORDER BY quantity DESC LIMIT 3;
 `
-
-    // const return_data = [{quantity: 0}, {quantity: 0}, {quantity: 0}];
-
-    // if (data.length === 0) {
-    // 	res.send([]);
-    // 	return;
-    // }
-
-    // for (let i=0; i<data.length; i++){
-    // 	if (data[i].quantity > return_data[0].quantity) {
-    // 	    return_data[2] = return_data[1];
-    // 	    return_data[1] = return_data[0];
-    // 	    return_data[0] = data[i];
-    // 	} else if (data[i].quantity > return_data[1].quantity) {
-    // 	    return_data[2] = return_data[1];
-    // 	    return_data[1] = data[i];
-    // 	} else if (data[i].quantity > return_data[2].quantity) {
-    // 	    return_data[2] = data[i]
-    // 	}
-    // }
 
     res.send(result)
 })

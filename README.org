@@ -1,5 +1,15 @@
 #+title: Simple CRUD | TypesCript + React + PostgreSQL
 
+<div align="center">
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original-wordmark.svg" />
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" />
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" />
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" />
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original-wordmark.svg" />
+</div>
+
+Este aplicativo está hospedado em: https://simples-crud-challenge.onrender.com
+
 Este projeto é um CRUD (Create Read Update Delete) feito como desafio para um processo de seleção de um estágio.
 A proposta era utilizar [[https://react.dev/][React]] e [[https://nodejs.org/en][NodeJS]] para desenvolver a aplicação, fazendo telas para Registro de produtos,
 modificação de produtos, apresentação de produtos, e haviam 3 desafios, criar um widget de paginação do 0, e
@@ -12,7 +22,6 @@ para [[https://www.typescriptlang.org/][TypeScript]] e integrá-lo com [[https:/
 simplicidade). Desde o principio [[https://styled-components.com/][StyledComponents]] foi utilizado para adcionar estilo aos elementos.
 
 A aplicação foi hospedada utilizando o serviço de hospedagem do [[https://render.com/][Render]], tanto o servidor quanto o banco de dados.
-Eis o link para acessálo: https://simples-crud-challenge.onrender.com
 
 * Estrutura do código fonte
 + Pasta raiz/

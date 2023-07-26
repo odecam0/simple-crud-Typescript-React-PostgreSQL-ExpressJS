@@ -12,7 +12,8 @@ const StyledButton = styled.button`
         font-weight: bold;
 `
 
-interface PaginationProps {    max_p: number;
+interface PaginationProps {
+    max_p: number;
     total_p: number;
     this_p: number;
     goto_page: (n:number) => void;

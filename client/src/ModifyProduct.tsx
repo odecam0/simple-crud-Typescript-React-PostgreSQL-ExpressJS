@@ -18,8 +18,6 @@ interface ModifyProductAPIResponse {
     message: string;
 }
 
-// interface ModifyProductEvent extends
-
 export const ModifyProduct : React.FC<ModifyProductProps> = (props) => {
     const [data , setData] = useState<ModifyProductState>({
 	"pid_to_modify": 0,
