@@ -3,7 +3,8 @@ import styled from 'styled-components';
 
 import { StyledPagination } from './PaginationWidget';
 
-import { StyledTable } from './TableStyle.js';
+//@ts-ignore
+import { StyledTable } from './TableStyle';
 
 import { Product } from './CustomTypes';
 

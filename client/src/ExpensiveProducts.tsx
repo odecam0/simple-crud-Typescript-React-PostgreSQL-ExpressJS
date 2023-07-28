@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 
+//@ts-ignore
 import { StyledTable } from './TableStyle.js';
 
 const StyledText = styled.p`

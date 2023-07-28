@@ -1,107 +1,62 @@
-"use strict";
-var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
-    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
-    return cooked;
-};
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-exports.__esModule = true;
-exports.StyledRegisterForm = exports.RegisterProductForm = void 0;
-var react_1 = __importStar(require("react"));
-var styled_components_1 = __importDefault(require("styled-components"));
-var StyledForm_js_1 = require("./StyledForm.js");
-var RegisterProductForm = function (props) {
-    var _a = (0, react_1.useState)({
-        "pname": "",
-        "price": 0,
-        "amount_sold": 0,
-        "pid": 0,
-        "description": "",
-        "quantity": 0
-    }), data = _a[0], setData = _a[1];
-    var handleChange = function (e) {
-        setData(function (data) {
-            var _a;
-            return __assign(__assign({}, data), (_a = {}, _a[e.target.name] = e.target.value, _a));
-        });
-    };
-    var regProd = function (e) {
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useState } from 'react';
+import styled from 'styled-components';
+//@ts-ignore
+import { baseFormStyle } from './StyledForm.js';
+export const RegisterProductForm = (props) => {
+    // const [data, setData] = useState<Product>({
+    // 	"pname": "",
+    // 	"price": 0,
+    // 	"amount_sold": 0,
+    // 	"pid": 0,
+    // 	"description": "",
+    // 	"quantity": 0
+    // });
+    const [pname, setPname] = useState('');
+    const [price, setPrice] = useState('');
+    const [amount_sold, setAmount_sold] = useState('');
+    const [pid, setPid] = useState('');
+    const [description, setDescription] = useState('');
+    const [quantity, setQuantity] = useState('');
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // 	if (e.target.validity.valid) {
+    // 		setData((data) => { return { ...data, [e.target.name]: e.target.value } });
+    // 	}
+    // };
+    const regProd = (e) => {
         e.preventDefault();
         fetch('/api/register_product', {
             method: 'POST',
             cache: 'no-store',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
-        })["catch"](function (err) { return console.error(err); });
-        setData({
-            "pname": "",
-            "price": 0,
-            "amount_sold": 0,
-            "pid": 0,
-            "description": "",
-            "quantity": 0
-        });
+            body: JSON.stringify({
+                pname: pname,
+                price: Number(price),
+                amount_sold: Number(amount_sold),
+                pid: Number(pid),
+                description: description,
+                quantity: Number(quantity)
+            }),
+        }).catch(err => console.error(err));
+        setPname('');
+        setPrice('');
+        setAmount_sold('');
+        setPid('');
+        setDescription('');
+        setQuantity('');
+        // setData({
+        // 	"pname": "",
+        // 	"price": 0,
+        // 	"amount_sold": 0,
+        // 	"pid": 0,
+        // 	"description": "",
+        // 	"quantity": 0,
+        // });
     };
-    return (react_1["default"].createElement("form", { onSubmit: regProd, className: props.className },
-        react_1["default"].createElement("label", null,
-            "Product's name:",
-            react_1["default"].createElement("input", { type: 'text', name: 'pname', value: data.pname, onChange: handleChange })),
-        react_1["default"].createElement("br", null),
-        react_1["default"].createElement("label", null,
-            "Product's price:",
-            react_1["default"].createElement("input", { type: 'text', name: 'price', value: data.price, onChange: handleChange })),
-        react_1["default"].createElement("br", null),
-        react_1["default"].createElement("label", null,
-            "Amount of products sold:",
-            react_1["default"].createElement("input", { type: 'text', name: 'amount_sold', value: data.amount_sold, onChange: handleChange })),
-        react_1["default"].createElement("br", null),
-        react_1["default"].createElement("label", null,
-            "Product's ID:",
-            react_1["default"].createElement("input", { type: 'text', name: 'pid', value: data.pid, onChange: handleChange })),
-        react_1["default"].createElement("br", null),
-        react_1["default"].createElement("label", null,
-            "Product's description:",
-            react_1["default"].createElement("input", { type: 'text', name: 'description', value: data.description, onChange: handleChange })),
-        react_1["default"].createElement("br", null),
-        react_1["default"].createElement("input", { className: 'submit', type: 'submit', value: 'Submit' })));
+    return (_jsxs("form", { onSubmit: regProd, className: props.className, children: [_jsxs("label", { children: ["Product's name:", _jsx("input", { type: 'text', name: 'pname', value: pname, onChange: e => setPname(e.target.value) })] }), _jsx("br", {}), _jsxs("label", { children: ["Product's price:", _jsx("input", { type: 'number', name: 'price', pattern: "[0-9]*(\\.[0-9]+)?", value: price, onChange: e => e.target.validity && setPrice(e.target.value) })] }), _jsx("br", {}), _jsxs("label", { children: ["Amount of products sold:", _jsx("input", { type: 'number', name: 'amount_sold', pattern: "[0-9]*", value: amount_sold, onChange: e => e.target.validity && setAmount_sold(e.target.value) })] }), _jsx("br", {}), _jsxs("label", { children: ["Product's ID:", _jsx("input", { type: 'number', name: 'pid', pattern: "[0-9]*", value: pid, onChange: e => e.target.validity && setPid(e.target.value) })] }), _jsx("br", {}), _jsxs("label", { children: ["Product's description:", _jsx("input", { type: 'text', name: 'description', value: description, onChange: e => e.target.validity && setDescription(e.target.value) })] }), _jsx("br", {}), _jsx("input", { className: 'submit', type: 'submit', value: 'Submit' })] }));
 };
-exports.RegisterProductForm = RegisterProductForm;
-exports.StyledRegisterForm = (0, styled_components_1["default"])(exports.RegisterProductForm)(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n    ", "\n"], ["\n    ", "\n"])), StyledForm_js_1.baseFormStyle);
-var templateObject_1;
+export const StyledRegisterForm = styled(RegisterProductForm) `
+	${baseFormStyle}
+`;
