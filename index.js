@@ -1,32 +1,32 @@
-import express from 'express'; // express = require('express');
+import express from 'express';
 const app = express();
 import path from 'path';
-// const path = require('path');
 app.use(express.static('client/build'));
 app.use(express.json());
+//@ts-ignore
 let { sql } = await import('./db.mjs');
+try {
+    const table_exists_p = await sql `
+   CREATE TABLE IF NOT EXISTS products (
+      pname VARCHAR(30),
+      price INT,
+      amount_sold INT,
+      pid INT PRIMARY KEY,
+      description VARCHAR(201),
+      quantity INT
+   );
+`;
+    console.log(qualquer_merda);
+    console.log(table_exists_p);
+}
+catch (error) {
+    console.error(error);
+}
 app.get('/api/most_in_stock', async (req, res) => {
     console.log("Get to /api/most-expensive");
     const result = await sql `
 	SELECT * FROM products ORDER BY quantity DESC LIMIT 3;
 `;
-    // const return_data = [{quantity: 0}, {quantity: 0}, {quantity: 0}];
-    // if (data.length === 0) {
-    // 	res.send([]);
-    // 	return;
-    // }
-    // for (let i=0; i<data.length; i++){
-    // 	if (data[i].quantity > return_data[0].quantity) {
-    // 	    return_data[2] = return_data[1];
-    // 	    return_data[1] = return_data[0];
-    // 	    return_data[0] = data[i];
-    // 	} else if (data[i].quantity > return_data[1].quantity) {
-    // 	    return_data[2] = return_data[1];
-    // 	    return_data[1] = data[i];
-    // 	} else if (data[i].quantity > return_data[2].quantity) {
-    // 	    return_data[2] = data[i]
-    // 	}
-    // }
     res.send(result);
 });
 app.get('/api/most_expensive', async (req, res) => {
@@ -38,10 +38,15 @@ app.get('/api/most_expensive', async (req, res) => {
 });
 app.get('/api/amount_products', async (req, res) => {
     console.log("Get to /api/amount_products");
-    const [count] = await sql `
+    try {
+        const [count] = await sql `
 SELECT COUNT(pid) FROM products;
 `;
-    res.send({ 'length': count.count });
+        res.send({ 'length': count.count });
+    }
+    catch (error) {
+        console.error(error);
+    }
 });
 app.post('/api/products_range', async (req, res) => {
     console.log("Post to /api/products_range");

@@ -8,9 +8,11 @@ app.use(express.json());
 
 import { Product } from './client/src/CustomTypes.js';
 
+//@ts-ignore
 let { sql } = await import('./db.mjs');
 
-sql`
+try {
+   const table_exists_p = await sql`
    CREATE TABLE IF NOT EXISTS products (
       pname VARCHAR(30),
       price INT,
@@ -20,6 +22,11 @@ sql`
       quantity INT
    );
 `
+    console.log(qualquer_merda);
+    console.log(table_exists_p);
+} catch (error) {
+    console.error(error);
+}
 
 app.get('/api/most_in_stock', async (req, res) => {
     console.log("Get to /api/most-expensive");
