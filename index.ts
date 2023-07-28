@@ -22,7 +22,6 @@ try {
       quantity INT
    );
 `
-    console.log(qualquer_merda);
     console.log(table_exists_p);
 } catch (error) {
     console.error(error);
