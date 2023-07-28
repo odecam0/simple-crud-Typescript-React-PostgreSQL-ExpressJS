@@ -1,22 +1,26 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
+interface ButtonProps {
+    selected? : boolean,
+    inactive? : boolean
+}
+
 const StyledButton = styled.button`
-        background-color: ${props => props.selected ? 'green' : 'white'};
-        border-color: ${props => props.inactive ? 'grey' : 'green'};
-        color:        ${props => props.inactive ? 'grey' :
-                                                   props.selected ? 'white' :
-                                                                   'green'};
+        background-color: ${(props: ButtonProps) => props.selected ? 'green' : 'white'};
+        border-color: ${(props: ButtonProps) => props.inactive ? 'grey' : 'green'};
+        color:        ${(props: ButtonProps) => props.inactive ? 'grey' :
+                                                props.selected ? 'white' :
+                                                                 'green'};
         border-radius: 10px;
         font-size: large;
         font-weight: bold;
 `
-
 interface PaginationProps {    max_p: number;
     total_p: number;
     this_p: number;
     goto_page: (n:number) => void;
-    className: string;
+    className?: string;
 }
 
 const PaginationWidget : React.FC<PaginationProps>= (props) => {
@@ -95,94 +99,94 @@ const PaginationWidget : React.FC<PaginationProps>= (props) => {
     // (TOTAL_P - MAX_P) até TOTAL_P
 
     if (total_p > max_p) { // In case there are more pages then waht can be shown
-	if ( this_p <= limit ) {
-	    // pages_numbers = [1, 2, ..., max_p]
-	    for (let i=1; i<=max_p; i++) {
-		pages_numbers.push(i);
-	    }
-	    pages_numbers.push('...');
-	} else if ( this_p <= total_p - limit ) {
-	// (this_p > max_p/2) && this_p (<= total_p - max_p/2)
-	    pages_numbers.push('...');
-	    for (let i=this_p-limit; i<= this_p+limit; i++) {
-		pages_numbers.push(i);
-	    }
-	    pages_numbers.push('...');
-	} else {
-	// this_p > total_p - max_p/2
-	    
-	    pages_numbers.push('...');
-	    for (let i=total_p-(max_p-1); i<=total_p; i++) {
-		pages_numbers.push(i);
-	    }
-	}
+    if ( this_p <= limit ) {
+        // pages_numbers = [1, 2, ..., max_p]
+        for (let i=1; i<=max_p; i++) {
+        pages_numbers.push(i);
+        }
+        pages_numbers.push('...');
+    } else if ( this_p <= total_p - limit ) {
+    // (this_p > max_p/2) && this_p (<= total_p - max_p/2)
+        pages_numbers.push('...');
+        for (let i=this_p-limit; i<= this_p+limit; i++) {
+        pages_numbers.push(i);
+        }
+        pages_numbers.push('...');
     } else {
-	for (let i=1; i<=total_p; i++) {
-	    pages_numbers.push(i);
-	}
+    // this_p > total_p - max_p/2
+
+        pages_numbers.push('...');
+        for (let i=total_p-(max_p-1); i<=total_p; i++) {
+        pages_numbers.push(i);
+        }
+    }
+    } else {
+    for (let i=1; i<=total_p; i++) {
+        pages_numbers.push(i);
+    }
     }
 
     // Turn page numbers into buttons
     const buttons_list = pages_numbers.map(
-	(x, i) => {
-	    if (x === props.this_p) {
-		return (<StyledButton
-			    selected
-			    className='number'
-			    key={i}
-			onClick={() => props.goto_page(x)}>
-			    {x}
-			</StyledButton>);
-	    } else if (x !== '...'){
-		return (<StyledButton
-			 className='number'
-			onClick={() => props.goto_page(x)}
-			 key={i}>
-			 {x}
-			</StyledButton>);
-	    } else {
-		return(<StyledButton
-			className='number'
-			key={i}>
-			{x}
-		       </StyledButton>);
-	    }
-	}
+    (x, i) => {
+        if (x === props.this_p) {
+        return (<StyledButton
+                selected
+                className='number'
+                key={i}
+            onClick={() => props.goto_page(x)}>
+                {x}
+            </StyledButton>);
+        } else if (x !== '...'){
+        return (<StyledButton
+             className='number'
+            onClick={() => props.goto_page(x)}
+             key={i}>
+             {x}
+            </StyledButton>);
+        } else {
+        return(<StyledButton
+            className='number'
+            key={i}>
+            {x}
+               </StyledButton>);
+        }
+    }
     )
 
     // Deal with Goto page functionality
     const [goto_page, setGotoPage] = useState<string>("");
     const gotoPageSubmit = (e: React.FormEvent<HTMLFormElement>) : void => {
-	e.preventDefault();
-	props.goto_page(parseInt(goto_page));
-	setGotoPage("");
+    e.preventDefault();
+    props.goto_page(parseInt(goto_page));
+    setGotoPage("");
     }
 
     return (
-	<div className={props.className}>
-	    <div className='pages'>
-		{props.this_p === 1 ?
-		 <StyledButton inactive>Previous page</StyledButton> :
-		    <StyledButton onClick={() => props.goto_page(this_p - 1)}>Previous page</StyledButton>}
-		{buttons_list}
-		{props.this_p === props.total_p ?
-		 <StyledButton inactive>Next page</StyledButton> :
-		    <StyledButton onClick={() => props.goto_page(this_p + 1)}>Next page</StyledButton>}
-	    </div>
+    <div className={props.className}>
+        <div className='pages'>
+        {props.this_p === 1 ?
+         <StyledButton inactive>Previous page</StyledButton> :
+            <StyledButton onClick={() => props.goto_page(this_p - 1)}>Previous page</StyledButton>}
+        {buttons_list}
+        {props.this_p === props.total_p ?
+         <StyledButton inactive>Next page</StyledButton> :
+            <StyledButton onClick={() => props.goto_page(this_p + 1)}>Next page</StyledButton>}
+        </div>
 
-	    <p>Pages: {props.total_p}</p>
+        <p>Pages: {props.total_p}</p>
 
-	    <form onSubmit={e => gotoPageSubmit(e)}>
-		<label>
-		    Goto page:
-		    <input
-			type='text'
-			value={goto_page}
-			onChange={e => setGotoPage(e.target.value)}/>
-		</label>
-		<input type='submit' value='Go'/>
-	    </form>
-	</div>
+        <form onSubmit={e => gotoPageSubmit(e)}>
+        <label>
+            Goto page:
+            <input
+            type='text'
+            value={goto_page}
+            onChange={e => setGotoPage(e.target.value)}/>
+        </label>
+        <input type='submit' value='Go'/>
+        </form>
+    </div>
     );
 }
 

@@ -48,11 +48,14 @@ interface return_api_amount_products {
 app.get('/api/amount_products', async (req, res) => {
     console.log("Get to /api/amount_products");
 
-    const [count] = await sql<return_api_amount_products[]>`
+    try {
+        const [count] = await sql<return_api_amount_products[]>`
 SELECT COUNT(pid) FROM products;
 `
-
-    res.send({'length': count.count});
+        res.send({ 'length': count.count });
+    } catch (error) {
+        console.error(error);
+    }
 })
 
 app.post('/api/products_range', async (req, res) => {

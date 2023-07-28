@@ -23,7 +23,10 @@
     "author": "Bruno Macedo",
     "license": "ISC",
     "devDependencies": {
-        "@types/node": "^18.15.11"
+        "@tsconfig/create-react-app": "^2.0.1",
+        "@types/express": "^4.17.17",
+        "@types/node": "^18.15.11",
+        "@types/styled-components": "^5.1.26"
     },
-    "type" : "module"
+    "type": "module"
 }

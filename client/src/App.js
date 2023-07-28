@@ -6,7 +6,7 @@ import { Link, Routes, Route } from 'react-router-dom';
 import styled from 'styled-components';
 import StyledButton from './StyledButton.js'
 
-mimport { StyledModifyForm } from './ModifyProduct.js';
+import { StyledModifyForm } from './ModifyProduct.js';
 import { StyledShowProducts } from './ShowProducts.js';
 import { StyledRegisterForm } from './RegisterProduct.js';
 
@@ -59,7 +59,6 @@ function App(props) {
 		<Route path="/register_product" element={<StyledRegisterForm/>} />
 		<Route path="/show_products" element={<StyledShowProducts/>} />
 		<Route path="/modify_products" element={<StyledModifyForm/>} />
-		<Route path="/#/debug" element={<Debug/>} />
 		<Route path="/expensive_products" element={<ExpensiveProducts/>} />
 		<Route path="/most_in_stock" element={<HighestAmount/>} />
 	    </Routes>
