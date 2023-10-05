@@ -114,13 +114,13 @@ const PaginationWidget = (props) => {
     // Turn page numbers into buttons
     const buttons_list = pages_numbers.map((x, i) => {
         if (x === props.this_p) {
-            return (_jsx(StyledButton, { selected: true, className: 'number', onClick: () => props.goto_page(x), children: x }, i));
+            return (_jsx("button", { selected: true, className: 'number', onClick: () => props.goto_page(x), children: x }, i));
         }
         else if (x !== '...') {
-            return (_jsx(StyledButton, { className: 'number', onClick: () => props.goto_page(x), children: x }, i));
+            return (_jsx("button", { className: 'number', onClick: () => props.goto_page(x), children: x }, i));
         }
         else {
-            return (_jsx(StyledButton, { className: 'number', children: x }, i));
+            return (_jsx("button", { className: 'number', children: x }, i));
         }
     });
     // Deal with Goto page functionality
@@ -131,10 +131,10 @@ const PaginationWidget = (props) => {
         setGotoPage("");
     };
     return (_jsxs("div", { className: props.className, children: [_jsxs("div", { className: 'pages', children: [props.this_p === 1 ?
-                        _jsx(StyledButton, { inactive: true, children: "Previous page" }) :
-                        _jsx(StyledButton, { onClick: () => props.goto_page(this_p - 1), children: "Previous page" }), buttons_list, props.this_p === props.total_p ?
-                        _jsx(StyledButton, { inactive: true, children: "Next page" }) :
-                        _jsx(StyledButton, { onClick: () => props.goto_page(this_p + 1), children: "Next page" })] }), _jsxs("p", { children: ["Pages: ", props.total_p] }), _jsxs("form", { onSubmit: e => gotoPageSubmit(e), children: [_jsxs("label", { children: ["Goto page:", _jsx("input", { type: 'text', value: goto_page, onChange: e => setGotoPage(e.target.value) })] }), _jsx("input", { type: 'submit', value: 'Go' })] })] }));
+                        _jsx("button", { inactive: true, children: "Previous page" }) :
+                        _jsx("button", { onClick: () => props.goto_page(this_p - 1), children: "Previous page" }), buttons_list, props.this_p === props.total_p ?
+                        _jsx("button", { inactive: true, children: "Next page" }) :
+                        _jsx("button", { onClick: () => props.goto_page(this_p + 1), children: "Next page" })] }), _jsxs("p", { children: ["Pages: ", props.total_p] }), _jsxs("form", { onSubmit: e => gotoPageSubmit(e), children: [_jsxs("label", { children: ["Goto page:", _jsx("input", { type: 'text', value: goto_page, onChange: e => setGotoPage(e.target.value) })] }), _jsx("input", { type: 'submit', value: 'Go' })] })] }));
 };
 export const StyledPagination = styled(PaginationWidget) `
     display: flex;
@@ -149,17 +149,15 @@ export const StyledPagination = styled(PaginationWidget) `
 
     input {
         width: 50px;
-        border-color: green;
         border-radius: 10px;
-        background-color: white;
         text-align: center;
-        color: green;
         font-weight: bold;
     }
 
     form {
         display: flex;
         gap: 0.2rem;
+	align-items: center;
     }
 
     button.number {
@@ -169,6 +167,7 @@ export const StyledPagination = styled(PaginationWidget) `
     .pages {
         display: flex;
         justify-content: center;
+	align-items: center;
         gap: 0.25rem;
     }
 `;

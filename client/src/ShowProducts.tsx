@@ -74,7 +74,7 @@ export const ShowRangeOfProducts : React.FC<ShowRangeOfProductsProps> = (props) 
             total_p={n_pages}
             goto_page={goto_page}/>
         <div id='table-div'>
-        <StyledTable>
+        <table>
             <thead>
             <tr>
                 <th className='th1'>Name</th>
@@ -88,23 +88,8 @@ export const ShowRangeOfProducts : React.FC<ShowRangeOfProductsProps> = (props) 
             <tbody>
             {ps}
             </tbody>
-        </StyledTable>
+        </table>
         </div>
     </div>
     );
 }
-
-export const StyledShowProducts = styled(ShowRangeOfProducts)`
-    height: 100%;
-    display: flex;
-    flex-flow: column;
-    padding-top: 3rem;
-
-    #table-div {
-        flex-grow: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    height: 100%;
-    }
-`

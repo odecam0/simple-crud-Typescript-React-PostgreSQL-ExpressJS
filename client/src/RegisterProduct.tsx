@@ -12,27 +12,12 @@ interface RegisterProductProps {
 
 export const RegisterProductForm: React.FC<RegisterProductProps> = (props) => {
 
-	// const [data, setData] = useState<Product>({
-	// 	"pname": "",
-	// 	"price": 0,
-	// 	"amount_sold": 0,
-	// 	"pid": 0,
-	// 	"description": "",
-	// 	"quantity": 0
-	// });
-
 	const [pname, setPname] = useState('');
 	const [price, setPrice] = useState('');
 	const [amount_sold, setAmount_sold] = useState('');
 	const [pid, setPid] = useState('');
 	const [description, setDescription] = useState('');
 	const [quantity, setQuantity] = useState('');
-
-	// const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	if (e.target.validity.valid) {
-	// 		setData((data) => { return { ...data, [e.target.name]: e.target.value } });
-	// 	}
-	// };
 
 	const regProd = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -59,19 +44,10 @@ export const RegisterProductForm: React.FC<RegisterProductProps> = (props) => {
 		setPid('');
 		setDescription('');
 		setQuantity('');
-
-		// setData({
-		// 	"pname": "",
-		// 	"price": 0,
-		// 	"amount_sold": 0,
-		// 	"pid": 0,
-		// 	"description": "",
-		// 	"quantity": 0,
-		// });
 	}
 
 	return (
-		<form onSubmit={regProd} className={props.className}>
+		<form onSubmit={regProd}>
 			<label>
 				{"Product's name:"}
 				<input
@@ -80,7 +56,6 @@ export const RegisterProductForm: React.FC<RegisterProductProps> = (props) => {
 					value={pname}
 					onChange={e => setPname(e.target.value)} />
 			</label>
-			<br />
 			<label>
 				{"Product's price:"}
 				<input
@@ -90,7 +65,6 @@ export const RegisterProductForm: React.FC<RegisterProductProps> = (props) => {
 					value={price}
 					onChange={e => e.target.validity && setPrice(e.target.value) } />
 			</label>
-			<br />
 			<label>
 				Amount of products sold:
 				<input
@@ -100,7 +74,6 @@ export const RegisterProductForm: React.FC<RegisterProductProps> = (props) => {
 					value={amount_sold}
 					onChange={e => e.target.validity && setAmount_sold(e.target.value)} />
 			</label>
-			<br />
 			<label>
 				{"Product's ID:"}
 				<input
@@ -110,7 +83,6 @@ export const RegisterProductForm: React.FC<RegisterProductProps> = (props) => {
 					value={pid}
 					onChange={e => e.target.validity && setPid(e.target.value)} />
 			</label>
-			<br />
 			<label>
 				{"Product's description:"}
 				<input
@@ -119,12 +91,8 @@ export const RegisterProductForm: React.FC<RegisterProductProps> = (props) => {
 					value={description}
 					onChange={e => e.target.validity && setDescription(e.target.value)} />
 			</label>
-			<br />
 			<input className='submit' type='submit' value='Submit' />
 		</form>
 	);
 }
 
-export const StyledRegisterForm = styled(RegisterProductForm)`
-	${baseFormStyle}
-`;

@@ -38,7 +38,7 @@ export const HighestAmount = () => {
     return (
 	<>
 	    <StyledText>Here are the 3 products with highest amount in stock:</StyledText>
-	    <StyledTable>
+	    <table>
 		<thead>
 		    <tr>
 			<th className='th1'>Name</th>
@@ -52,7 +52,7 @@ export const HighestAmount = () => {
 		<tbody>
 		    {p_list}
 		</tbody>
-	    </StyledTable>
+	    </table>
 	</>
     );
 }

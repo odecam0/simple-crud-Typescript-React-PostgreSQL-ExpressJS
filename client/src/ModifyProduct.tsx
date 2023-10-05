@@ -64,7 +64,7 @@ export const ModifyProduct: React.FC<ModifyProductProps> = (props) => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className={props.className}>
+        <form onSubmit={handleSubmit}>
             <label>
                 ID of product to modify:
                 <input type='number' name='pid_to_modify' pattern="[0-9]*" value={pid_to_modify} onChange={e => e.target.validity && setPid_to_modify(e.target.value)} />
@@ -86,7 +86,3 @@ export const ModifyProduct: React.FC<ModifyProductProps> = (props) => {
         </form>
     );
 }
-
-export const StyledModifyForm = styled(ModifyProduct)`
-    ${baseFormStyle}       
-`

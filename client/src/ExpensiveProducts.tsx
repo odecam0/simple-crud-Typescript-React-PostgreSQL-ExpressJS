@@ -38,7 +38,7 @@ export function ExpensiveProducts () {
     return (
 	<>
 	    <StyledText>Here are the 3 most expensive products:</StyledText>
-	    <StyledTable>
+	    <table>
 		<thead>
 		    <tr>
 			<th className='th1'>Name</th>
@@ -52,7 +52,7 @@ export function ExpensiveProducts () {
 		<tbody>
 		    {p_list}
 		</tbody>
-	    </StyledTable>
+	    </table>
 	</>
     );
 }

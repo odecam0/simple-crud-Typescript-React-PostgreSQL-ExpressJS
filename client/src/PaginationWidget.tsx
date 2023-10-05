@@ -130,26 +130,26 @@ const PaginationWidget : React.FC<PaginationProps>= (props) => {
     const buttons_list = pages_numbers.map(
     (x, i) => {
         if (x === props.this_p) {
-        return (<StyledButton
+        return (<button
                 selected
                 className='number'
                 key={i}
             onClick={() => props.goto_page(x)}>
                 {x}
-            </StyledButton>);
+            </button>);
         } else if (x !== '...'){
-        return (<StyledButton
+        return (<button
              className='number'
             onClick={() => props.goto_page(x)}
              key={i}>
              {x}
-            </StyledButton>);
+            </button>);
         } else {
-        return(<StyledButton
+        return(<button
             className='number'
             key={i}>
             {x}
-               </StyledButton>);
+               </button>);
         }
     }
     )
@@ -166,12 +166,12 @@ const PaginationWidget : React.FC<PaginationProps>= (props) => {
     <div className={props.className}>
         <div className='pages'>
         {props.this_p === 1 ?
-         <StyledButton inactive>Previous page</StyledButton> :
-            <StyledButton onClick={() => props.goto_page(this_p - 1)}>Previous page</StyledButton>}
+         <button inactive>Previous page</button> :
+            <button onClick={() => props.goto_page(this_p - 1)}>Previous page</button>}
         {buttons_list}
         {props.this_p === props.total_p ?
-         <StyledButton inactive>Next page</StyledButton> :
-            <StyledButton onClick={() => props.goto_page(this_p + 1)}>Next page</StyledButton>}
+         <button inactive>Next page</button> :
+            <button onClick={() => props.goto_page(this_p + 1)}>Next page</button>}
         </div>
 
         <p>Pages: {props.total_p}</p>
@@ -203,17 +203,15 @@ export const StyledPagination = styled(PaginationWidget)`
 
     input {
         width: 50px;
-        border-color: green;
         border-radius: 10px;
-        background-color: white;
         text-align: center;
-        color: green;
         font-weight: bold;
     }
 
     form {
         display: flex;
         gap: 0.2rem;
+	align-items: center;
     }
 
     button.number {
@@ -223,6 +221,7 @@ export const StyledPagination = styled(PaginationWidget)`
     .pages {
         display: flex;
         justify-content: center;
+	align-items: center;
         gap: 0.25rem;
     }
 `
